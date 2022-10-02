@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Builds the site in the current repository
+
+set -e
+
+ENGINE_PATH="$(dirname "$0")"
+SITE_PATH="$(realpath "$ENGINE_PATH/..")"
+SRC_PATH="$SITE_PATH/src"
+PAGES_PATH="$SRC_PATH/pages"
+ARTICLES_PATH="$SRC_PATH/articles"
+
+# The various pages
+
+RESERVED_NAMES="src|engine|README"
+HEADER_FILE="$ENGINE_PATH/header.html"
+FOOTER_FILE="$ENGINE_PATH/footer.html"
+
+for page_file in "$PAGES_PATH"/*; do
+	file="$(basename "$page_file")"
+	name="$(echo "$file" | cut -d"." -f1)"
+	extension="$(echo "$file" | cut -d"." -f2)"
+	
+	if [ -n "$(echo "$name" | grep -xE "$RESERVED_NAMES")" ]; then
+		continue
+	fi
+	
+	output_file="$SITE_PATH/$name.html"
+	cat "$HEADER_FILE" "$page_file" "$FOOTER_FILE" > $output_file
+done
+
+# TODO: The articles
+
+# TODO: The index page
