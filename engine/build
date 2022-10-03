@@ -6,6 +6,7 @@ set -e
 
 ENGINE_PATH="$(dirname "$0")"
 SITE_PATH="$(realpath "$ENGINE_PATH/..")"
+SITE_ARTICLES_PATH="$SITE_PATH/articles"
 SRC_PATH="$SITE_PATH/src"
 PAGES_PATH="$SRC_PATH/pages"
 ARTICLES_PATH="$SRC_PATH/articles"
@@ -19,24 +20,27 @@ RESERVED_NAMES="src|engine|README"
 HEADER_FILE="$ENGINE_PATH/header.html"
 FOOTER_FILE="$ENGINE_PATH/footer.html"
 
-echo "# Building files"
-
-for input_file in "$PAGES_PATH"/*; do
+build_file() {
+	input_file="$1"
+	output_path="$2"
 	file="$(basename "$input_file")"
 	name="$(echo "$file" | cut -d"." -f1)"
 	extension="$(echo "$file" | cut -d"." -f2)"
 	
 	if [ -n "$(echo "$name" | grep -xE "$RESERVED_NAMES")" ]; then
-		continue
+		return 0
 	fi
 	
 	site_file="$name.html"
-	output_file="$SITE_PATH/$site_file"
-	echo "## Generating $site_file"
+	output_file="$output_path/$site_file"
 	
+	rel_output_file="$(echo "$output_file" | sed "s|^$SITE_PATH/||")"
+	echo "## Generating $rel_output_file"
+	
+	mkdir -p "$(dirname "$output_file")"
 	case "$extension" in
 		"html")
-			cat "$HEADER_FILE" "$input_file" "$FOOTER_FILE" > $output_file
+			cat "$HEADER_FILE" "$input_file" "$FOOTER_FILE" > "$output_file"
 			;;
 			
 		"md")
@@ -53,8 +57,19 @@ for input_file in "$PAGES_PATH"/*; do
 			echo "WARNING: Unknown file type $extension"
 			;;
 	esac
+}
+
+
+echo "# Building pages"
+for input_file in "$PAGES_PATH"/*; do
+	build_file "$input_file" "$SITE_PATH"
 done
 
-# TODO: The articles
+
+echo "# Building articles"
+for input_file in "$ARTICLES_PATH"/*; do
+	build_file "$input_file" "$SITE_ARTICLES_PATH"
+done
+
 
 # TODO: The index page
