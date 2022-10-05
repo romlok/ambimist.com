@@ -17,8 +17,8 @@ PANDOC="$(which pandoc || echo -n)"
 # Generate the various pages
 
 RESERVED_NAMES="src|engine|README"
-HEADER_FILE="$ENGINE_PATH/header.html"
-FOOTER_FILE="$ENGINE_PATH/footer.html"
+PAGE_TEMPLATE="$ENGINE_PATH/page.html"
+
 
 build_file() {
 	input_file="$1"
@@ -40,7 +40,9 @@ build_file() {
 	mkdir -p "$(dirname "$output_file")"
 	case "$extension" in
 		"html")
-			cat "$HEADER_FILE" "$input_file" "$FOOTER_FILE" > "$output_file"
+			cat "$input_file" \
+				| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ';d};' "$PAGE_TEMPLATE" \
+				> "$output_file"
 			;;
 			
 		"md")
@@ -49,7 +51,8 @@ build_file() {
 			else
 				cat "$input_file" \
 					| "$PANDOC" -f markdown -t html \
-					| cat "$HEADER_FILE" - "$FOOTER_FILE" > $output_file
+					| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ";d};" "$PAGE_TEMPLATE" \
+					> "$output_file"
 			fi
 			;;
 			
@@ -64,7 +67,6 @@ echo "# Building pages"
 for input_file in "$PAGES_PATH"/*; do
 	build_file "$input_file" "$SITE_PATH"
 done
-
 
 echo "# Building articles"
 for input_file in "$ARTICLES_PATH"/*; do
