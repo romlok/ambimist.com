@@ -20,6 +20,29 @@ RESERVED_NAMES="src|engine|README"
 PAGE_TEMPLATE="$ENGINE_PATH/page.html"
 
 
+ext_to_converter() {
+	case "$1" in
+		"html")
+			echo -n 'cat'
+			;;
+			
+		"md")
+			if [ -z "$PANDOC" ]; then
+				echo "ERROR: Pandoc must be installed to use markdown" >&2
+				return 1
+			fi
+			
+			echo -n "$PANDOC -f markdown -t html"
+			;;
+			
+		*)
+			echo "WARNING: Unknown file type $extension" >&2
+			return 0
+			;;
+	esac
+}
+
+
 build_file() {
 	input_file="$1"
 	output_path="$2"
@@ -38,28 +61,13 @@ build_file() {
 	echo "## Generating $rel_output_file"
 	
 	mkdir -p "$(dirname "$output_file")"
-	case "$extension" in
-		"html")
-			cat "$input_file" \
-				| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ';d};' "$PAGE_TEMPLATE" \
-				> "$output_file"
-			;;
-			
-		"md")
-			if [ -z "$PANDOC" ]; then
-				echo "ERROR: Pandoc must be installed to use markdown"
-			else
-				cat "$input_file" \
-					| "$PANDOC" -f markdown -t html \
-					| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ";d};" "$PAGE_TEMPLATE" \
-					> "$output_file"
-			fi
-			;;
-			
-		*)
-			echo "WARNING: Unknown file type $extension"
-			;;
-	esac
+	converter="$(ext_to_converter "$extension")"
+	if [ -n "$converter" ]; then
+		cat "$input_file" \
+			| $converter \
+			| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ';d};' "$PAGE_TEMPLATE" \
+			> "$output_file"
+	fi
 }
 
 
