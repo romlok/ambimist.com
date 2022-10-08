@@ -13,12 +13,22 @@ ARTICLES_PATH="$SRC_PATH/articles"
 
 # Check environment
 PANDOC="$(which pandoc || echo -n)"
-BRANCH_NAME="$(git branch --show-current | sed 's/-/ /g')"
 
 # Derive site-wide parameters
+capitalise() {
+	read val
+	echo -n "$val" | head -c1 | tr [:lower:] [:upper:]
+	echo -n "$val" | tail -c+2
+}
+
 SITE_NAME="$(
-	echo -n "$BRANCH_NAME" | head -c1 | tr [:lower:] [:upper:]
-	echo -n "$BRANCH_NAME" | tail -c+2
+	{
+		git describe --tags --first-parent --abbrev=0 2>/dev/null \
+		|| git symbolic-ref --short HEAD 2>/dev/null \
+		|| echo -n "Unnamed website"
+	} \
+	| sed 's/-/ /g' \
+	| capitalise
 )"
 
 # Generate the various pages
