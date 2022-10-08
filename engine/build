@@ -14,6 +14,23 @@ ARTICLES_PATH="$SRC_PATH/articles"
 # Check environment
 PANDOC="$(which pandoc || echo -n)"
 
+# Derive site-wide parameters
+capitalise() {
+	read val
+	echo -n "$val" | head -c1 | tr [:lower:] [:upper:]
+	echo -n "$val" | tail -c+2
+}
+
+SITE_NAME="$(
+	{
+		git describe --tags --first-parent --abbrev=0 2>/dev/null \
+		|| git symbolic-ref --short HEAD 2>/dev/null \
+		|| echo -n "Unnamed website"
+	} \
+	| sed 's/-/ /g' \
+	| capitalise
+)"
+
 # Generate the various pages
 
 RESERVED_NAMES="src|engine|README"
@@ -65,7 +82,9 @@ build_file() {
 	if [ -n "$converter" ]; then
 		cat "$input_file" \
 			| $converter \
-			| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ';d};' "$PAGE_TEMPLATE" \
+			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
+				-e "s/<SITE_NAME>/$SITE_NAME/g" \
+				"$PAGE_TEMPLATE" \
 			> "$output_file"
 	fi
 }
