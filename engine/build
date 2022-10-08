@@ -11,8 +11,40 @@ SRC_PATH="$SITE_PATH/src"
 PAGES_PATH="$SRC_PATH/pages"
 ARTICLES_PATH="$SRC_PATH/articles"
 
+PAGE_TEMPLATE="$ENGINE_PATH/page.html"
+NAV_TEMPLATE="$ENGINE_PATH/nav-item.html"
+
+RESERVED_NAMES="src|engine|README"
+reserved_name() {
+	echo "$1" | grep -xE "$RESERVED_NAMES" >/dev/null
+}
+
+
 # Check environment
 PANDOC="$(which pandoc || echo -n)"
+
+ext_to_converter() {
+	case "$1" in
+		"html")
+			echo -n 'cat'
+			;;
+
+		"md")
+			if [ -z "$PANDOC" ]; then
+				echo "ERROR: Pandoc must be installed to use markdown" >&2
+				return 1
+			fi
+
+			echo -n "$PANDOC -f markdown -t html"
+			;;
+
+		*)
+			echo "WARNING: Unknown file type $extension" >&2
+			return 0
+			;;
+	esac
+}
+
 
 # Derive site-wide parameters
 capitalise() {
@@ -20,6 +52,9 @@ capitalise() {
 	echo -n "$val" | head -c1 | tr [:lower:] [:upper:]
 	echo -n "$val" | tail -c+2
 }
+
+
+echo "# Building site"
 
 SITE_NAME="$(
 	{
@@ -30,35 +65,41 @@ SITE_NAME="$(
 	| sed 's/-/ /g' \
 	| capitalise
 )"
-
-# Generate the various pages
-
-RESERVED_NAMES="src|engine|README"
-PAGE_TEMPLATE="$ENGINE_PATH/page.html"
+echo "$SITE_NAME"
 
 
-ext_to_converter() {
-	case "$1" in
-		"html")
-			echo -n 'cat'
-			;;
-			
-		"md")
-			if [ -z "$PANDOC" ]; then
-				echo "ERROR: Pandoc must be installed to use markdown" >&2
-				return 1
-			fi
-			
-			echo -n "$PANDOC -f markdown -t html"
-			;;
-			
-		*)
-			echo "WARNING: Unknown file type $extension" >&2
-			return 0
-			;;
-	esac
+echo "## Prepopulating page template"
+
+SITE_PAGE_TEMPLATE="$(mktemp)"
+echo "$SITE_PAGE_TEMPLATE"
+
+cat "$PAGE_TEMPLATE" \
+	| sed -e "s/<SITE-NAME>/$SITE_NAME/g" \
+	> "$SITE_PAGE_TEMPLATE"
+
+
+echo "### Building main navigation"
+
+build_pages_nav() {
+	for page_file in "$PAGES_PATH"/*; do
+		name="$(basename "$page_file" | cut -d. -f1)"
+		url="/$name.html"
+		title="$(echo "$name" | capitalise)"
+
+		reserved_name "$name" && continue
+
+		cat "$NAV_TEMPLATE" \
+			| sed -e "s|<URL>|$url|g" \
+				-e "s|<TITLE>|$title|g"
+	done
 }
 
+build_pages_nav \
+	| sed -i -e "/<PAGES-NAVIGATION>/ { r /dev/stdin" -e ';d};' \
+		"$SITE_PAGE_TEMPLATE"
+
+
+# Generate the various pages
 
 build_file() {
 	input_file="$1"
@@ -67,38 +108,41 @@ build_file() {
 	name="$(echo "$file" | cut -d"." -f1)"
 	extension="$(echo "$file" | cut -d"." -f2)"
 	
-	if [ -n "$(echo "$name" | grep -xE "$RESERVED_NAMES")" ]; then
-		return 0
-	fi
-	
+	reserved_name "$name" && return 0
+
 	site_file="$name.html"
 	output_file="$output_path/$site_file"
 	
 	rel_output_file="$(echo "$output_file" | sed "s|^$SITE_PATH/||")"
-	echo "## Generating $rel_output_file"
+	echo "### Generating $rel_output_file"
 	
 	mkdir -p "$(dirname "$output_file")"
 	converter="$(ext_to_converter "$extension")"
 	if [ -n "$converter" ]; then
+		pages_navigation="$(build_pages_nav "$output_file")"
 		cat "$input_file" \
 			| $converter \
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
-				-e "s/<SITE_NAME>/$SITE_NAME/g" \
-				"$PAGE_TEMPLATE" \
+				-e "s/<SITE-NAME>/$SITE_NAME/g" \
+				"$SITE_PAGE_TEMPLATE" \
 			> "$output_file"
 	fi
 }
 
 
-echo "# Building pages"
+echo "## Building pages"
 for input_file in "$PAGES_PATH"/*; do
 	build_file "$input_file" "$SITE_PATH"
 done
 
-echo "# Building articles"
+echo "## Building articles"
 for input_file in "$ARTICLES_PATH"/*; do
 	build_file "$input_file" "$SITE_ARTICLES_PATH"
 done
 
 
 # TODO: The index page
+
+
+echo "## Removing temporary files"
+rm "$SITE_PAGE_TEMPLATE"
