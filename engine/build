@@ -13,6 +13,13 @@ ARTICLES_PATH="$SRC_PATH/articles"
 
 # Check environment
 PANDOC="$(which pandoc || echo -n)"
+BRANCH_NAME="$(git branch --show-current | sed 's/-/ /g')"
+
+# Derive site-wide parameters
+SITE_NAME="$(
+	echo -n "$BRANCH_NAME" | head -c1 | tr [:lower:] [:upper:]
+	echo -n "$BRANCH_NAME" | tail -c+2
+)"
 
 # Generate the various pages
 
@@ -65,7 +72,9 @@ build_file() {
 	if [ -n "$converter" ]; then
 		cat "$input_file" \
 			| $converter \
-			| sed -e "/^<PAGE-CONTENT>$/ { r /dev/stdin" -e ';d};' "$PAGE_TEMPLATE" \
+			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
+				-e "s/<SITE_NAME>/$SITE_NAME/g" \
+				"$PAGE_TEMPLATE" \
 			> "$output_file"
 	fi
 }
