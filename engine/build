@@ -15,12 +15,19 @@ INDEX_TEMPLATE="$ENGINE_PATH/index-content.html"
 INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 
 RESERVED_NAMES="src|engine|README"
+
+page_name() {
+	basename "$1" | cut -d. -f1
+}
+
 reserved_name() {
-	basename "$1" \
-		| cut -d. -f1 \
+	page_name "$1" \
 		| grep -xE "$RESERVED_NAMES" >/dev/null
 }
 
+index_name() {
+	[ "$(page_name "$1")" = "index" ]
+}
 
 # Check environment
 PANDOC="$(which pandoc || echo -n)"
@@ -37,7 +44,7 @@ ext_to_converter() {
 				return 1
 			fi
 
-			echo -n "$PANDOC -f markdown -t html"
+			echo -n "$PANDOC -f markdown-smart -t html"
 			;;
 
 		*)
@@ -85,8 +92,9 @@ echo "### Building main navigation"
 build_pages_nav() {
 	for page_file in "$SRC_PATH"/*; do
 		reserved_name "$page_file" && continue
+		index_name "$page_file" && continue
 
-		name="$(basename "$page_file" | cut -d. -f1)"
+		name="$(page_name "$page_file")"
 		url="/$name"
 		title="$(echo "$name" | capitalise)"
 
@@ -122,9 +130,14 @@ site_path() {
 page_path() {
 	source_file="$1"
 
-	name="$(basename "$source_file" | cut -d"." -f1)"
+	name="$(page_name "$source_file")"
 	rel_path="$(dirname "$source_file" | sed -e "s|^$SRC_PATH/\?||")"
-	readlink -m "$SITE_PATH/$rel_path/$name"
+
+	if [ "index" = "$name" ]; then
+		readlink -m "$SITE_PATH/$rel_path"
+	else
+		readlink -m "$SITE_PATH/$rel_path/$name"
+	fi
 }
 
 build_file() (
@@ -132,18 +145,21 @@ build_file() (
 
 	reserved_name "$input_file" && return 0
 
-	file="$(basename "$input_file")"
-	name="$(echo "$file" | cut -d"." -f1)"
-	extension="$(echo "$file" | cut -d"." -f2)"
-	
+
 	output_path="$(page_path "$input_file")"
 	output_index="$output_path/index.html"
 	
-	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH/||")"
+	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+	if index_name "$input_file"; then
+		rel_output_path="$rel_output_path/index"
+	fi
 	echo "### $rel_output_path"
-	
+
 	mkdir -p "$output_path"
+
+	extension="$(basename "$input_file" | cut -d. -f2)"
 	converter="$(ext_to_converter "$extension")"
+
 	if [ -n "$converter" ]; then
 		pages_navigation="$(build_pages_nav)"
 		cat "$input_file" \
@@ -176,10 +192,10 @@ build_dir_index() (
 
 	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
 	dir_name="$(basename "$rel_path" | capitalise)"
-	output_file="$(site_path "$source_path")/index.html"
+	output_path="$(site_path "$source_path")"
 
-	rel_output_path="$(echo "$output_file" | sed "s|^$SITE_PATH/||")"
-	echo "### $rel_output_path"
+	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+	echo "### $rel_output_path/index"
 
 	build_dir_index_items "$source_path" \
 		| sed -e "/<INDEX-ITEMS>/ { r /dev/stdin" -e ';d};' \
@@ -188,21 +204,27 @@ build_dir_index() (
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			-e "s/<SITE-NAME>/$SITE_NAME/g" \
 			"$SITE_PAGE_TEMPLATE" \
-		> "$output_file"
+		> "$output_path/index.html"
 )
 
 build_dir() (
 	source_path="$1"
+	indexed=""
 
 	for source_file in "$source_path"/*; do
 		if [ -d "$source_file" ]; then
 			build_dir "$source_file"
 		else
+			if index_name "$source_file"; then
+				indexed="yup"
+			fi
 			build_file "$source_file"
 		fi
 	done
 
-	build_dir_index "$source_path"
+	if [ -z "$indexed" ]; then
+		build_dir_index "$source_path"
+	fi
 )
 
 build_dir "$SRC_PATH"
