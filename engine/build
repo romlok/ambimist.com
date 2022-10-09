@@ -81,13 +81,10 @@ echo "### Building main navigation"
 
 build_pages_nav() {
 	for page_file in "$SRC_PATH"/*; do
-		if [ -d "$page_file" ]; then
-			continue
-		fi
 		reserved_name "$page_file" && continue
 
 		name="$(basename "$page_file" | cut -d. -f1)"
-		url="/$name.html"
+		url="/$name"
 		title="$(echo "$name" | capitalise)"
 
 		cat "$NAV_TEMPLATE" \
@@ -105,7 +102,7 @@ build_pages_nav \
 
 build_file() {
 	input_file="$1"
-	output_path="$2"
+	target_path="$2"
 
 	reserved_name "$input_file" && return 0
 
@@ -113,22 +110,22 @@ build_file() {
 	name="$(echo "$file" | cut -d"." -f1)"
 	extension="$(echo "$file" | cut -d"." -f2)"
 	
-	site_file="$name.html"
-	output_file="$output_path/$site_file"
+	output_path="$target_path/$name"
+	output_index="$output_path/index.html"
 	
-	rel_output_file="$(echo "$output_file" | sed "s|^$SITE_PATH/||")"
-	echo "### $rel_output_file"
+	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH/||")"
+	echo "### $rel_output_path"
 	
-	mkdir -p "$(dirname "$output_file")"
+	mkdir -p "$output_path"
 	converter="$(ext_to_converter "$extension")"
 	if [ -n "$converter" ]; then
-		pages_navigation="$(build_pages_nav "$output_file")"
+		pages_navigation="$(build_pages_nav)"
 		cat "$input_file" \
 			| $converter \
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 				-e "s/<SITE-NAME>/$SITE_NAME/g" \
 				"$SITE_PAGE_TEMPLATE" \
-			> "$output_file"
+			> "$output_index"
 	fi
 }
 
