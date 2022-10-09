@@ -6,17 +6,16 @@ set -e
 
 ENGINE_PATH="$(dirname "$0")"
 SITE_PATH="$(realpath "$ENGINE_PATH/..")"
-SITE_ARTICLES_PATH="$SITE_PATH/articles"
 SRC_PATH="$SITE_PATH/src"
-PAGES_PATH="$SRC_PATH/pages"
-ARTICLES_PATH="$SRC_PATH/articles"
 
 PAGE_TEMPLATE="$ENGINE_PATH/page.html"
 NAV_TEMPLATE="$ENGINE_PATH/nav-item.html"
 
 RESERVED_NAMES="src|engine|README"
 reserved_name() {
-	echo "$1" | grep -xE "$RESERVED_NAMES" >/dev/null
+	basename "$1" \
+		| cut -d. -f1 \
+		| grep -xE "$RESERVED_NAMES" >/dev/null
 }
 
 
@@ -81,12 +80,15 @@ cat "$PAGE_TEMPLATE" \
 echo "### Building main navigation"
 
 build_pages_nav() {
-	for page_file in "$PAGES_PATH"/*; do
+	for page_file in "$SRC_PATH"/*; do
+		if [ -d "$page_file" ]; then
+			continue
+		fi
+		reserved_name "$page_file" && continue
+
 		name="$(basename "$page_file" | cut -d. -f1)"
 		url="/$name.html"
 		title="$(echo "$name" | capitalise)"
-
-		reserved_name "$name" && continue
 
 		cat "$NAV_TEMPLATE" \
 			| sed -e "s|<URL>|$url|g" \
@@ -104,17 +106,18 @@ build_pages_nav \
 build_file() {
 	input_file="$1"
 	output_path="$2"
+
+	reserved_name "$input_file" && return 0
+
 	file="$(basename "$input_file")"
 	name="$(echo "$file" | cut -d"." -f1)"
 	extension="$(echo "$file" | cut -d"." -f2)"
 	
-	reserved_name "$name" && return 0
-
 	site_file="$name.html"
 	output_file="$output_path/$site_file"
 	
 	rel_output_file="$(echo "$output_file" | sed "s|^$SITE_PATH/||")"
-	echo "### Generating $rel_output_file"
+	echo "### $rel_output_file"
 	
 	mkdir -p "$(dirname "$output_file")"
 	converter="$(ext_to_converter "$extension")"
@@ -129,19 +132,32 @@ build_file() {
 	fi
 }
 
+build_dir() (
+	source_path="$1"
 
-echo "## Building pages"
-for input_file in "$PAGES_PATH"/*; do
-	build_file "$input_file" "$SITE_PATH"
+	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
+	for source_file in "$source_path"/*; do
+		if [ -d "$source_file" ]; then
+			build_dir "$source_file"
+		else
+			build_file "$source_file" "$(realpath "$SITE_PATH/$rel_path")"
+		fi
+	done
+)
+
+echo "## Removing previous files"
+cd "$SITE_PATH"
+for extant in *; do
+	reserved_name "$extant" && continue
+
+	rm -rfv "$extant"
 done
 
-echo "## Building articles"
-for input_file in "$ARTICLES_PATH"/*; do
-	build_file "$input_file" "$SITE_ARTICLES_PATH"
-done
+echo "## Generating pages"
+build_dir "$SRC_PATH"
 
 
-# TODO: The index page
+# TODO: index pages
 
 
 echo "## Removing temporary files"
