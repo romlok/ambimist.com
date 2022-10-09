@@ -5,11 +5,14 @@
 set -e
 
 ENGINE_PATH="$(dirname "$0")"
-SITE_PATH="$(realpath "$ENGINE_PATH/..")"
+SITE_PATH="$(readlink -f "$ENGINE_PATH/..")"
 SRC_PATH="$SITE_PATH/src"
 
 PAGE_TEMPLATE="$ENGINE_PATH/page.html"
 NAV_TEMPLATE="$ENGINE_PATH/nav-item.html"
+
+INDEX_TEMPLATE="$ENGINE_PATH/index-content.html"
+INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 
 RESERVED_NAMES="src|engine|README"
 reserved_name() {
@@ -98,11 +101,34 @@ build_pages_nav \
 		"$SITE_PAGE_TEMPLATE"
 
 
-# Generate the various pages
+echo "## Removing previous files"
+cd "$SITE_PATH"
+for extant in *; do
+	reserved_name "$extant" && continue
 
-build_file() {
+	rm -rfv "$extant"
+done
+
+
+echo "## Generating pages"
+
+site_path() {
+	source_path="$1"
+
+	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
+	readlink -m "$SITE_PATH/$rel_path"
+}
+
+page_path() {
+	source_file="$1"
+
+	name="$(basename "$source_file" | cut -d"." -f1)"
+	rel_path="$(dirname "$source_file" | sed -e "s|^$SRC_PATH/\?||")"
+	readlink -m "$SITE_PATH/$rel_path/$name"
+}
+
+build_file() (
 	input_file="$1"
-	target_path="$2"
 
 	reserved_name "$input_file" && return 0
 
@@ -110,7 +136,7 @@ build_file() {
 	name="$(echo "$file" | cut -d"." -f1)"
 	extension="$(echo "$file" | cut -d"." -f2)"
 	
-	output_path="$target_path/$name"
+	output_path="$(page_path "$input_file")"
 	output_index="$output_path/index.html"
 	
 	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH/||")"
@@ -127,34 +153,59 @@ build_file() {
 				"$SITE_PAGE_TEMPLATE" \
 			> "$output_index"
 	fi
-}
+)
+
+build_dir_index_items() (
+	source_path="$1"
+
+	for source_file in "$source_path"/*; do
+		reserved_name "$source_file" && continue
+
+		output_path="$(page_path "$source_file")"
+		url="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+		title="$(basename "$output_path" | capitalise)"
+
+		cat "$INDEX_ITEM_TEMPLATE" \
+			| sed -e "s|<URL>|$url|g" \
+				-e "s|<TITLE>|$title|g"
+	done
+)
+
+build_dir_index() (
+	source_path="$1"
+
+	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
+	dir_name="$(basename "$rel_path" | capitalise)"
+	output_file="$(site_path "$source_path")/index.html"
+
+	rel_output_path="$(echo "$output_file" | sed "s|^$SITE_PATH/||")"
+	echo "### $rel_output_path"
+
+	build_dir_index_items "$source_path" \
+		| sed -e "/<INDEX-ITEMS>/ { r /dev/stdin" -e ';d};' \
+			-e "s/<DIR-NAME>/$dir_name/g" \
+			"$INDEX_TEMPLATE" \
+		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
+			-e "s/<SITE-NAME>/$SITE_NAME/g" \
+			"$SITE_PAGE_TEMPLATE" \
+		> "$output_file"
+)
 
 build_dir() (
 	source_path="$1"
 
-	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
 	for source_file in "$source_path"/*; do
 		if [ -d "$source_file" ]; then
 			build_dir "$source_file"
 		else
-			build_file "$source_file" "$(realpath "$SITE_PATH/$rel_path")"
+			build_file "$source_file"
 		fi
 	done
+
+	build_dir_index "$source_path"
 )
 
-echo "## Removing previous files"
-cd "$SITE_PATH"
-for extant in *; do
-	reserved_name "$extant" && continue
-
-	rm -rfv "$extant"
-done
-
-echo "## Generating pages"
 build_dir "$SRC_PATH"
-
-
-# TODO: index pages
 
 
 echo "## Removing temporary files"
