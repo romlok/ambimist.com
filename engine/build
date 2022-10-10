@@ -4,6 +4,9 @@
 
 set -e
 
+# Remember to always use "local" time formats in git commands!
+export TZ="UTC0"
+
 ENGINE_PATH="$(dirname "$0")"
 SITE_PATH="$(readlink -f "$ENGINE_PATH/..")"
 SRC_PATH="$SITE_PATH/src"
@@ -13,6 +16,7 @@ NAV_TEMPLATE="$ENGINE_PATH/nav-item.html"
 
 INDEX_TEMPLATE="$ENGINE_PATH/index-content.html"
 INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
+INDEX_HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/index-history-item.html"
 
 RESERVED_NAMES="src|engine|README"
 
@@ -140,11 +144,65 @@ page_path() {
 	fi
 }
 
+sub_page_vars() (
+	input_file="$1"
+
+	## NB. Using --reverse neuters --follow, so we tail instead
+	date_created="$(git log --follow --author-date-order --date=local --pretty=format:"%as" -- "$input_file" | tail -n1)"
+	date_updated="$(git log --follow -n1 --author-date-order --date=local --pretty=format:"%as" -- "$input_file")"
+
+	sed \
+		-e "s/<SITE-NAME>/$SITE_NAME/g" \
+		-e "s/<DATE-CREATED>/$date_created/g" \
+		-e "s/<DATE-UPDATED>/$date_updated/g" \
+		</dev/stdin
+)
+
+
+build_history_items() (
+	source_path="$1"
+
+	git log --follow --date=format-local:"%Y-%m-%d %H:%M:%SZ" --pretty=tformat:"%H%x09%h%x09%ad%x09%s" -- "$source_path" \
+		| while read -r line; do
+			longhash="$(echo "$line" | cut -f1)"
+			shorthash="$(echo "$line" | cut -f2)"
+			date="$(echo "$line" | cut -f3)"
+			subject="$(echo "$line" | cut -f4-)"
+			cat "$INDEX_HISTORY_ITEM_TEMPLATE" \
+				| sed \
+					-e "s|<LONGHASH>|$longhash|g" \
+					-e "s|<SHORTHASH>|$shorthash|g" \
+					-e "s|<DATE>|$date|g" \
+					-e "s|<SUBJECT>|$subject|g"
+		done
+)
+
+build_history() (
+	source_path="$1"
+
+	reserved_name "$source_path" && return 0
+
+	echo "#### History page"
+
+	output_path="$(page_path "$source_path")"
+	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+
+	mkdir -p "$output_path"
+
+	build_history_items "$source_path" \
+		| sed -e "/<INDEX-ITEMS>/ { r /dev/stdin" -e ';d};' \
+			-e "s|<INDEX-TITLE>|$rel_output_path|g" \
+			"$INDEX_TEMPLATE" \
+		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
+			"$SITE_PAGE_TEMPLATE" \
+		| sub_page_vars "$source_path" \
+		> "$output_path/history.html"
+)
+
 build_file() (
 	input_file="$1"
 
 	reserved_name "$input_file" && return 0
-
 
 	output_path="$(page_path "$input_file")"
 	output_index="$output_path/index.html"
@@ -162,14 +220,18 @@ build_file() (
 
 	if [ -n "$converter" ]; then
 		pages_navigation="$(build_pages_nav)"
+
 		cat "$input_file" \
 			| $converter \
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
-				-e "s/<SITE-NAME>/$SITE_NAME/g" \
 				"$SITE_PAGE_TEMPLATE" \
+			| sub_page_vars "$input_file" \
 			> "$output_index"
+
+		build_history "$input_file"
 	fi
 )
+
 
 build_dir_index_items() (
 	source_path="$1"
@@ -199,12 +261,14 @@ build_dir_index() (
 
 	build_dir_index_items "$source_path" \
 		| sed -e "/<INDEX-ITEMS>/ { r /dev/stdin" -e ';d};' \
-			-e "s/<DIR-NAME>/$dir_name/g" \
+			-e "s/<INDEX-TITLE>/$dir_name/g" \
 			"$INDEX_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
-			-e "s/<SITE-NAME>/$SITE_NAME/g" \
 			"$SITE_PAGE_TEMPLATE" \
+		| sub_page_vars "$source_path" \
 		> "$output_path/index.html"
+
+	build_history "$source_path"
 )
 
 build_dir() (
