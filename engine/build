@@ -140,6 +140,20 @@ page_path() {
 	fi
 }
 
+sub_page_vars() (
+	input_file="$1"
+
+	## NB. Using --reverse neuters --follow, so we tail instead
+	date_created="$(git log --follow --author-date-order --pretty=format:"%as" -- "$input_file" | tail -n1)"
+	date_updated="$(git log --follow -n1 --author-date-order --pretty=format:"%as" -- "$input_file")"
+
+	sed \
+		-e "s/<SITE-NAME>/$SITE_NAME/g" \
+		-e "s/<DATE-CREATED>/$date_created/g" \
+		-e "s/<DATE-UPDATED>/$date_updated/g" \
+		</dev/stdin
+)
+
 build_file() (
 	input_file="$1"
 
@@ -162,11 +176,12 @@ build_file() (
 
 	if [ -n "$converter" ]; then
 		pages_navigation="$(build_pages_nav)"
+
 		cat "$input_file" \
 			| $converter \
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
-				-e "s/<SITE-NAME>/$SITE_NAME/g" \
 				"$SITE_PAGE_TEMPLATE" \
+			| sub_page_vars "$input_file" \
 			> "$output_index"
 	fi
 )
@@ -202,8 +217,8 @@ build_dir_index() (
 			-e "s/<DIR-NAME>/$dir_name/g" \
 			"$INDEX_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
-			-e "s/<SITE-NAME>/$SITE_NAME/g" \
 			"$SITE_PAGE_TEMPLATE" \
+		| sub_page_vars "$source_path" \
 		> "$output_path/index.html"
 )
 
