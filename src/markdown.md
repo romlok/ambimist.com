@@ -1,3 +1,3 @@
 ## Markdown
 
-The engine also supports writing pages in markdown
+If `pandoc` is installed, the engine also supports pages written in Markdown.
