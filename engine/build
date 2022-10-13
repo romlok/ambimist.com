@@ -10,15 +10,17 @@ export TZ="UTC0"
 ENGINE_PATH="$(dirname "$0")"
 SITE_PATH="$(readlink -f "$ENGINE_PATH/..")"
 SRC_PATH="$SITE_PATH/src"
+CSS_PATH="$SITE_PATH/css"
 
 PAGE_TEMPLATE="$ENGINE_PATH/page.html"
 NAV_TEMPLATE="$ENGINE_PATH/nav-item.html"
+CSS_ITEM_TEMPLATE="$ENGINE_PATH/stylesheet.html"
 
 INDEX_TEMPLATE="$ENGINE_PATH/index-content.html"
 INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 INDEX_HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/index-history-item.html"
 
-RESERVED_NAMES="src|engine|README"
+RESERVED_NAMES="src|engine|css|README"
 
 page_name() {
 	basename "$1" | cut -d. -f1
@@ -31,6 +33,10 @@ reserved_name() {
 
 index_name() {
 	[ "$(page_name "$1")" = "index" ]
+}
+
+site_rel_path() {
+	echo "$1" | sed "s|^$SITE_PATH||"
 }
 
 # Check environment
@@ -185,7 +191,7 @@ build_history() (
 	echo "#### History page"
 
 	output_path="$(page_path "$source_path")"
-	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+	rel_output_path="$(site_rel_path "$output_path")"
 
 	mkdir -p "$output_path"
 
@@ -195,9 +201,35 @@ build_history() (
 			"$INDEX_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
+		| sub_css \
 		| sub_page_vars "$source_path" \
 		> "$output_path/history.html"
 )
+
+
+sub_css() (
+	indent=""
+	while IFS= read -r line; do
+		if echo "$line" | grep '<STYLESHEETS>' >/dev/null; then
+			indent="$(echo "$line" | sed -e 's/<STYLESHEETS>.*$//')"
+			break
+		fi
+		echo "$line"
+	done
+
+	for source_file in "$CSS_PATH"/*; do
+		stylesheet="$(site_rel_path "$source_file")"
+		echo -n "$indent"
+		cat "$CSS_ITEM_TEMPLATE" \
+			| sed \
+				-e "s|<URL>|$stylesheet|g"
+	done
+
+	while IFS= read -r line; do
+		echo "$line"
+	done
+)
+
 
 build_file() (
 	input_file="$1"
@@ -207,7 +239,7 @@ build_file() (
 	output_path="$(page_path "$input_file")"
 	output_index="$output_path/index.html"
 	
-	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+	rel_output_path="$(site_rel_path "$output_path")"
 	if index_name "$input_file"; then
 		rel_output_path="$rel_output_path/index"
 	fi
@@ -225,6 +257,7 @@ build_file() (
 			| $converter \
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 				"$SITE_PAGE_TEMPLATE" \
+			| sub_css \
 			| sub_page_vars "$input_file" \
 			> "$output_index"
 
@@ -240,7 +273,7 @@ build_dir_index_items() (
 		reserved_name "$source_file" && continue
 
 		output_path="$(page_path "$source_file")"
-		url="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+		url="$(site_rel_path "$output_path")"
 		title="$(basename "$output_path" | capitalise)"
 
 		cat "$INDEX_ITEM_TEMPLATE" \
@@ -256,7 +289,7 @@ build_dir_index() (
 	dir_name="$(basename "$rel_path" | capitalise)"
 	output_path="$(site_path "$source_path")"
 
-	rel_output_path="$(echo "$output_path" | sed "s|^$SITE_PATH||")"
+	rel_output_path="$(site_rel_path "$output_path")"
 	echo "### $rel_output_path/index"
 
 	build_dir_index_items "$source_path" \
@@ -265,6 +298,7 @@ build_dir_index() (
 			"$INDEX_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
+		| sub_css \
 		| sub_page_vars "$source_path" \
 		> "$output_path/index.html"
 
