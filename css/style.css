@@ -1,39 +1,78 @@
+:root {
+	--main-color: #f60;
+	--bg-color: #f608;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
 body {
 	margin: 0;
 	padding: 0;
 }
 
+
 header {
+	padding: 1rem 2rem;
+	background-color: var(--bg-color);
 }
 
-h1 {
+header a {
+	text-decoration: none;
+	color: inherit;
 }
 
 
 nav {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	padding: 1rem;
+	gap: 1rem;
 }
 nav a {
+	flex: 0;
+	padding: 1rem;
+	border: 0.1rem solid var(--main-color);
+	background-color: var(--bg-color);
+	font-weight: bold;
+	text-decoration: none;
+	color: inherit;
+}
+nav a:hover,
+nav a:focus-visible {
+	background-color: var(--main-color);
 }
 
 
 #page-history {
+	float: right;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0 1rem 1rem;
 }
-#page-history .page-created {
+#page-history h3 {
+	margin: 0;
 }
-#page-history .page-updated {
+#page-history .item {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+#page-history .item .event,
+#page-history .item .time {
 }
 
 
 main {
-}
-
-h2 {
-}
-h3 {
-}
-h4 {
-}
-h5 {
+	padding: 0 1rem 3rem;
 }
 
 
@@ -41,17 +80,39 @@ h5 {
 }
 
 #index li.page {
+	list-style: disc;
+}
+#index li.page .title {
 }
 
 #index li.history {
+	display: table-row;
+}
+#index li.history {
+	font-family: monospace;
+}
+#index li.history > * {
+	display: table-cell;
+	padding: 0.1rem 0.5rem;
 }
 #index li.history .date {
+	flex: 0;
+	white-space: nowrap;
 }
 #index li.history .hash {
+	flex: 0 1 20%;
+	max-width: 12ch;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 #index li.history .subject {
+	flex: 1 1 50%;
 }
 
-
 footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 1rem 2rem;
+	background-color: var(--bg-color);
 }
