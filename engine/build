@@ -192,6 +192,9 @@ build_history() (
 
 	output_path="$(page_path "$source_path")"
 	rel_output_path="$(site_rel_path "$output_path")"
+	if [ -z "$rel_output_path" ]; then
+		rel_output_path="/"
+	fi
 
 	mkdir -p "$output_path"
 
