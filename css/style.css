@@ -1,15 +1,15 @@
 :root {
 	--content-color: #222;
 	--bg-color: #fff;
-	--secondary-color: #fd0;
-	--secondary-bg: #222;
+	--secondary-color: #222;
+	--secondary-bg: #fd0;
 }
 @media (prefers-color-scheme: dark) {
 	:root {
 		--content-color: #eee;
 		--bg-color: #222;
 		--secondary-color: #222;
-		--secondary-bg: #da0;
+		--secondary-bg: #b90;
 	}
 }
 
@@ -72,6 +72,7 @@ nav a:focus-visible {
 	display: flex;
 	justify-content: flex-end;
 	gap: 1rem;
+	max-width: 65ch;
 	margin-bottom: 1rem;
 	padding: 0 1rem;
 }
@@ -87,6 +88,7 @@ nav a:focus-visible {
 
 main {
 	padding: 0 1rem 3rem;
+	max-width: 65ch;
 }
 
 
@@ -99,29 +101,29 @@ main {
 #index li.page .title {
 }
 
-#index li.history {
+
+#history li {
 	display: table-row;
-}
-#index li.history {
 	font-family: monospace;
 }
-#index li.history > * {
+#history li > * {
 	display: table-cell;
 	padding: 0.1rem 0.5rem;
 }
-#index li.history .date {
+#history .date {
 	flex: 0;
 	white-space: nowrap;
 }
-#index li.history .hash {
+#history .hash {
 	flex: 0 1 20%;
 	max-width: 12ch;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-#index li.history .subject {
+#history .subject {
 	flex: 1 1 50%;
 }
+
 
 footer {
 	position: absolute;
