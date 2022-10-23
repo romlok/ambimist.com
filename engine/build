@@ -18,7 +18,8 @@ CSS_ITEM_TEMPLATE="$ENGINE_PATH/stylesheet.html"
 
 INDEX_TEMPLATE="$ENGINE_PATH/index-content.html"
 INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
-INDEX_HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/index-history-item.html"
+HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
+HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
 RESERVED_NAMES="src|engine|css|README"
 
@@ -174,7 +175,7 @@ build_history_items() (
 			shorthash="$(echo "$line" | cut -f2)"
 			date="$(echo "$line" | cut -f3)"
 			subject="$(echo "$line" | cut -f4-)"
-			cat "$INDEX_HISTORY_ITEM_TEMPLATE" \
+			cat "$HISTORY_ITEM_TEMPLATE" \
 				| sed \
 					-e "s|<LONGHASH>|$longhash|g" \
 					-e "s|<SHORTHASH>|$shorthash|g" \
@@ -199,9 +200,9 @@ build_history() (
 	mkdir -p "$output_path"
 
 	build_history_items "$source_path" \
-		| sed -e "/<INDEX-ITEMS>/ { r /dev/stdin" -e ';d};' \
-			-e "s|<INDEX-TITLE>|$rel_output_path|g" \
-			"$INDEX_TEMPLATE" \
+		| sed -e "/<HISTORY-ITEMS>/ { r /dev/stdin" -e ';d};' \
+			-e "s|<HISTORY-TITLE>|$rel_output_path|g" \
+			"$HISTORY_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
 		| sub_css \
