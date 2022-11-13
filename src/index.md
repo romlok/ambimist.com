@@ -1,5 +1,15 @@
-This is an example website to demonstrate the site generator's capabilities.
+Everything's awful.
 
-Pages and subdirectories are generated from the files in the `src/` directory
-in the Git repository's root.  Both HTML fragments and [markdown](/markdown)
-documents are supported.
+It's all broken,
+
+All good things get corrupted,
+
+Anything promising turns to disappointment,
+
+The globe is warming,
+
+And the ocean is full of plastic,
+
+But in the end,
+
+It'll be all right.
