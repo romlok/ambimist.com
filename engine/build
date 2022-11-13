@@ -22,9 +22,10 @@ HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
 RESERVED_NAMES="src|engine|css|README"
+DRAFT_PREFIX="DRAFT_"
 
 page_name() {
-	basename "$1" | cut -d. -f1
+	basename "$1" | cut -d. -f1 | sed -e "s/^$DRAFT_PREFIX//"
 }
 
 reserved_name() {
@@ -35,6 +36,28 @@ reserved_name() {
 index_name() {
 	[ "$(page_name "$1")" = "index" ]
 }
+
+draft_name() {
+	basename "$1" | grep -e "^$DRAFT_PREFIX" >/dev/null
+}
+
+dir_indexable_files() {
+	source_path="$1"
+
+	for source_file in "$source_path"/*; do
+		reserved_name "$source_file" && continue
+		draft_name "$source_file" && continue
+		echo "$source_file"
+	done
+}
+
+empty_src_dir() {
+	source_path="$1"
+	[ ! -d "$source_path" ] && return 1
+	[ -n "$(dir_indexable_files "$source_path")" ] && return 1
+	return 0
+}
+
 
 site_rel_path() {
 	echo "$1" | sed "s|^$SITE_PATH||"
@@ -103,7 +126,9 @@ echo "### Building main navigation"
 build_pages_nav() {
 	for page_file in "$SRC_PATH"/*; do
 		reserved_name "$page_file" && continue
+		draft_name "$page_file" && continue
 		index_name "$page_file" && continue
+		empty_src_dir "$page_file" && continue
 
 		name="$(page_name "$page_file")"
 		url="/$name"
@@ -273,9 +298,7 @@ build_file() (
 build_dir_index_items() (
 	source_path="$1"
 
-	for source_file in "$source_path"/*; do
-		reserved_name "$source_file" && continue
-
+	for source_file in "$(dir_indexable_files "$source_path")"; do
 		output_path="$(page_path "$source_file")"
 		url="$(site_rel_path "$output_path")"
 		title="$(basename "$output_path" | capitalise)"
@@ -309,7 +332,7 @@ build_dir_index() (
 	build_history "$source_path"
 )
 
-build_dir() (
+build_dir() {
 	source_path="$1"
 	indexed=""
 
@@ -324,10 +347,11 @@ build_dir() (
 		fi
 	done
 
-	if [ -z "$indexed" ]; then
+	if [ -z "$indexed" ] \
+			&& [ -n "$(dir_indexable_files "$source_path")" ]; then
 		build_dir_index "$source_path"
 	fi
-)
+}
 
 build_dir "$SRC_PATH"
 
