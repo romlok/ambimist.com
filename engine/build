@@ -180,8 +180,8 @@ sub_page_vars() (
 	input_file="$1"
 
 	## NB. Using --reverse neuters --follow, so we tail instead
-	date_created="$(git log --follow --author-date-order --date=local --pretty=format:"%as" -- "$input_file" | tail -n1)"
-	date_updated="$(git log --follow -n1 --author-date-order --date=local --pretty=format:"%as" -- "$input_file")"
+	date_created="$(git log --follow --find-renames=20% --author-date-order --date=local --pretty=format:"%as" -- "$input_file" | tail -n1)"
+	date_updated="$(git log --follow --find-renames=20% -n1 --author-date-order --date=local --pretty=format:"%as" -- "$input_file")"
 
 	sed \
 		-e "s/<SITE-NAME>/$SITE_NAME/g" \
@@ -194,7 +194,7 @@ sub_page_vars() (
 build_history_items() (
 	source_path="$1"
 
-	git log --follow --date=format-local:"%Y-%m-%d %H:%M:%SZ" --pretty=tformat:"%H%x09%h%x09%ad%x09%s" -- "$source_path" \
+	git log --follow --find-renames=20% --date=format-local:"%Y-%m-%d %H:%M:%SZ" --pretty=tformat:"%H%x09%h%x09%ad%x09%s" -- "$source_path" \
 		| while read -r line; do
 			longhash="$(echo "$line" | cut -f1)"
 			shorthash="$(echo "$line" | cut -f2)"
