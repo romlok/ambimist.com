@@ -3,6 +3,7 @@
 	--bg-color: #fff;
 	--secondary-color: #222;
 	--secondary-bg: #fd0;
+	--link-color: #850;
 }
 @media (prefers-color-scheme: dark) {
 	:root {
@@ -10,6 +11,7 @@
 		--bg-color: #222;
 		--secondary-color: #222;
 		--secondary-bg: #b90;
+		--link-color: #b90;
 	}
 }
 
@@ -62,6 +64,7 @@ nav a:visited {
 	color: var(--secondary-color);
 	background-color: var(--secondary-bg);
 	text-decoration: none;
+	font-weight: bold;
 }
 nav a:hover,
 nav a:focus-visible {
@@ -90,6 +93,7 @@ nav a:focus-visible {
 
 main {
 	padding: 0 1rem 3rem;
+	line-height: 140%;
 }
 
 
@@ -136,12 +140,11 @@ footer {
 }
 
 
-a, a:visited {
-	font-weight: bold;
-	color: var(--content-color);
+a {
+	color: var(--link-color);
 }
-a:visited {
-	font-style: italic;
+a:hover {
+	color: var(--content-color);
 }
 
 h1, h2, h3, h4, h5 {
@@ -150,4 +153,8 @@ h1, h2, h3, h4, h5 {
 
 p {
 	margin: 1rem 0;
+}
+
+blockquote {
+	font-style: italic;
 }
