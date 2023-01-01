@@ -4,7 +4,8 @@ For those who are looking for love on the internet, rather than short-term fling
 
 ### Incentives
 
-> Show me the incentive, and I'll show you the outcome
+> Show me the incentive, and I'll show you the outcome.
+> - Charlie Munger
 
 Online dating companies, whether catering for hookups or long-term relationships, whether they have websites or apps, all share a single overriding incentive: profit.
 
@@ -36,6 +37,7 @@ Consequently, this drive to keep users around means that dating companies are in
 One alternative incentive which could be argued is the network effect of endorsements from those who do have success finding a partner using a dating app.  However, marketing and search engine optimisation scales far better than relying on word of mouth recommendations, and require far fewer actual successes.  That last part is important:
 
 > It turns out you are 12.4 times more likely to get married this year if you _don't_ subscribe to Match.com.
+> - OKCupid, 2010
 
 Over a decade ago, it was documented in a [(since deleted) blog post from OKCupid](https://www.gwern.net/docs/psychology/okcupid/whyyoushouldneverpayforonlinedating.html) that for-pay online dating sites are less successful at fomenting relationships than the population average.  This was based on two of the biggest dating sites' own advertised numbers.
 
