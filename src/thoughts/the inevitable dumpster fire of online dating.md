@@ -69,8 +69,8 @@ The "stable household" is frequently quoted as a hallmark of a strong and prospe
 
 ### In closing
 
-The current online dating industry is fundamentally broken for the goals they claim to facilitate.  The services are deceptive, abusive, and self-serving, but profitable - very profitable.
+The current online dating industry is fundamentally broken for the goals they claim to facilitate.  Today's dating apps use deceptive, abusive, and self-serving practises, which perpetuate and aggravate human misery for the sake of profit.
 
-Thus one should expect that any upstart service which actually fulfils the promise to get people into lasting relationships - and thus out of the dating pool, and thereby out of the industry's paying user base - will be fought tooth and nail by the established industry powers, in the media and the lobbies, as they try to protect their profits from the pursuit of happiness.
+Any upstart competitor which actually prioritises the promise of getting people into lasting relationships above all, will necessarily be getting people out of the dating pool, and therefore out of the dating industry's potential paying user base.  Thus we should expect that the established industry powers will fight such a competitor tooth and nail, by fair means or foul, in the media, the courts, and the lobbies.
 
-I hope that enough people with enough idealism, spite, grit, and determination come together to do this, but I'm not optimistic.
+So I hope that enough people with enough idealism, spite, grit, and determination come together to upend this industry, but I'm not optimistic.
