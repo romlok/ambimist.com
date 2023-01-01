@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Another jaded optimist</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+	<header>
+		<h1><a href="/">Another jaded optimist</a></h1>
+	</header>
+
+	<nav aria-labelledby="primary">
+<a href="/doings">Doings</a>
+<a href="/thoughts">Thoughts</a>
+	</nav>
+
+	<section id="page-history">
+		<a href="history.html">History</a>
+		<span class="item created">
+			<span class="event">Created</span>
+			<time class="time">2023-01-01</time>
+		</span>
+		<span class="item updated">
+			<span class="event">Updated</span>
+			<time class="time">2023-01-01</time>
+		</span>
+	</section>
+
+	<main>
+<h2 id="an-unnamed-git-native-static-site-builder">An unnamed git-native
+static site builder</h2>
+<p>I wanted this website to be just simple static files, so I went
+looking for a simple no-frills static site generator. None I found to be
+satisfactory. So being a software developer, I of course made my
+own.</p>
+<h3 id="principles">Principles</h3>
+<ul>
+<li>Git native</li>
+<li>Self contained</li>
+<li>Zero install</li>
+<li>Zero configuration</li>
+</ul>
+<h4 id="git-native">Git native</h4>
+<p>Two of my peeves about a lot of article-based websites are that: They
+fail to mention when an article is published; and they are not
+transparent when and what changes are made to published articles.</p>
+<p>Since I was inevitably going to be storing my site's content in Git,
+and Git tracks this information already, I decided to leverage Git's
+repository metadata to help build the site content.</p>
+<p>Once that decision had been made, it didn't take long to realise that
+one could derive other site information purely from Git metadata.</p>
+<p>Thus it was decided:</p>
+<ul>
+<li>If something can be derived from the content or metadata of the Git
+repository, it should be.</li>
+<li>If something <em>cannot</em> be derived from the Git repository,
+then one should think carefully if it is really that important.</li>
+</ul>
+<h4 id="self-contained">Self contained</h4>
+<p>The tool should live in the repository with the site it built. Thus,
+one always knows what version of the tool was used to build the site.
+And, in the spirit of software freedom, to distribute the site is to
+also distribute its means of production!</p>
+<p>For instance, one can see the source of the version used to build
+this site at <a href="/engine/build">/engine/build</a>.</p>
+<h4 id="zero-install">Zero install</h4>
+<p>Building a few static html pages isn't rocket science, I shouldn't
+need to download half the internet as dependencies, or install a new
+application. Ideally, there should be two requirements for the tool:</p>
+<ul>
+<li>Git</li>
+<li>A posix-compatible <code>/bin/sh</code></li>
+</ul>
+<p>Although it was found that, as a practical compromise,
+<code>pandoc</code> is required to be installed if one wants to build
+articles from Markdown sources.</p>
+<h4 id="zero-configuration">Zero configuration</h4>
+<p>I don't want to have to mess around with config files, when what I
+should be doing is writing articles. I should be able to just write my
+thoughts to files, and have the site be built sensibly based on the
+arrangement of those files in the Git repository.</p>
+<h3 id="how-it-works">How it works</h3>
+<p>I should probably write something here, yeah?</p>
+	</main>
+
+	<footer>
+	</footer>
+</body>
+</html>
