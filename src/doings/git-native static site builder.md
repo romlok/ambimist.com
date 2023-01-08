@@ -44,4 +44,16 @@ I don't want to have to mess around with config files, when what I should be doi
 
 ### How it works
 
-I should probably write something here, yeah?
+To create a new website, one simply needs to branch from `master` and start writing pages and articles in the repository's `src/` directory.  Once your changes are `git commit`ted, running the `engine/build` script will build all the HTML files for the site.
+
+The name of the new site, displayed in the site header, will be taken from the branch name. Or by the name of the nearest `git tag` in the branch history when the site is built.
+
+For each file and directory in `src/`, a directory will be created in the repository root, mirroring the structure.  Each such directory will contain an `index.html` for the content of the page, and a `history.html` with a summary of the changelog of the page.
+
+For each file and directory in the `src/` root itself, an entry will be added to the site's main navigation.
+
+Each `src` subdirectory which does not have an explicit `index.html` will have a simple index built.  This provides a list of all the documents and any deeper subdirectories.
+
+Any file whose name starts with `DRAFT_` will be built, but not automatically added to any index or navigation.
+
+The generated HTML code is static, and pre-defined by the engine.  Customisation of the site design, therefore, is done entirely through CSS.  This is achieved by creating `.css` files in a `css` directory in the repository root.  Any files in this directory will automatically be `link`ed in the HTML `head` of every page.
