@@ -23,7 +23,7 @@
 		</span>
 		<span class="item updated">
 			<span class="event">Updated</span>
-			<time class="time">2023-01-01</time>
+			<time class="time">2023-01-08</time>
 		</span>
 	</section>
 
@@ -81,7 +81,32 @@ should be doing is writing articles. I should be able to just write my
 thoughts to files, and have the site be built sensibly based on the
 arrangement of those files in the Git repository.</p>
 <h3 id="how-it-works">How it works</h3>
-<p>I should probably write something here, yeah?</p>
+<p>To create a new website, one simply needs to branch from
+<code>master</code> and start writing pages and articles in the
+repository's <code>src/</code> directory. Once your changes are
+<code>git commit</code>ted, running the <code>engine/build</code> script
+will build all the HTML files for the site.</p>
+<p>The name of the new site, displayed in the site header, will be taken
+from the branch name. Or by the name of the nearest <code>git tag</code>
+in the branch history when the site is built.</p>
+<p>For each file and directory in <code>src/</code>, a directory will be
+created in the repository root, mirroring the structure. Each such
+directory will contain an <code>index.html</code> for the content of the
+page, and a <code>history.html</code> with a summary of the changelog of
+the page.</p>
+<p>For each file and directory in the <code>src/</code> root itself, an
+entry will be added to the site's main navigation.</p>
+<p>Each <code>src</code> subdirectory which does not have an explicit
+<code>index.html</code> will have a simple index built. This provides a
+list of all the documents and any deeper subdirectories.</p>
+<p>Any file whose name starts with <code>DRAFT_</code> will be built,
+but not automatically added to any index or navigation.</p>
+<p>The generated HTML code is static, and pre-defined by the engine.
+Customisation of the site design, therefore, is done entirely through
+CSS. This is achieved by creating <code>.css</code> files in a
+<code>css</code> directory in the repository root. Any files in this
+directory will automatically be <code>link</code>ed in the HTML
+<code>head</code> of every page.</p>
 	</main>
 
 	<footer>
