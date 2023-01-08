@@ -2,18 +2,23 @@
 	--content-color: #222;
 	--bg-color: #fff;
 	--secondary-color: #222;
-	--secondary-bg: #fd0;
-	--link-color: #850;
+	--secondary-bg-color: #fd0;
+	--link-color: #840;
 }
 @media (prefers-color-scheme: dark) {
 	:root {
 		--content-color: #eee;
 		--bg-color: #222;
 		--secondary-color: #222;
-		--secondary-bg: #b90;
+		--secondary-bg-color: #b90;
 		--link-color: #b90;
 	}
 }
+
+
+/*
+	Styles for the structural site elements
+*/
 
 * {
 	box-sizing: border-box;
@@ -38,7 +43,7 @@ header {
 	margin-bottom: 1rem;
 	padding: 1rem;
 	color: var(--secondary-color);
-	background-color: var(--secondary-bg);
+	background-color: var(--secondary-bg-color);
 }
 
 header a,
@@ -56,14 +61,14 @@ nav {
 	padding: 0 1rem;
 	gap: 1rem;
 	color: var(--secondary-color);
-	background-color: var(--secondary-bg);
+	background-color: var(--secondary-bg-color);
 }
 nav a,
 nav a:visited {
 	flex: 0;
 	padding: 1rem;
 	color: var(--secondary-color);
-	background-color: var(--secondary-bg);
+	background-color: var(--secondary-bg-color);
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -137,9 +142,13 @@ footer {
 	width: 100%;
 	padding: 1rem;
 	color: var(--secondary-color);
-	background-color: var(--secondary-bg);
+	background-color: var(--secondary-bg-color);
 }
 
+
+/*
+	Individual element styles
+*/
 
 a {
 	color: var(--link-color);
@@ -151,6 +160,10 @@ a:hover {
 h1, h2, h3, h4, h5 {
 	margin: 1em 0;
 }
+h3 {
+	border-top: 1em solid var(--secondary-bg-color);
+	padding-top: 1em;
+}
 
 p {
 	margin: 1rem 0;
@@ -158,4 +171,9 @@ p {
 
 blockquote {
 	font-style: italic;
+}
+
+code {
+	padding: 0.1em 0.2em;
+	opacity: 0.8;
 }
