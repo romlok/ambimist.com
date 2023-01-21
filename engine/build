@@ -298,7 +298,7 @@ build_file() (
 build_dir_index_items() (
 	source_path="$1"
 
-	for source_file in "$(dir_indexable_files "$source_path")"; do
+	dir_indexable_files "$source_path" | while read -r source_file; do
 		output_path="$(page_path "$source_file")"
 		url="$(site_rel_path "$output_path")"
 		title="$(basename "$output_path" | capitalise)"
