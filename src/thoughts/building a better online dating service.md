@@ -12,6 +12,7 @@ In my opinion these are the principles that should underpin any such design:
 * Private and secure
 * The user has control
 * Don't judge, shame, or assume
+* On purpose
 
 
 #### Non-profit governance
@@ -47,6 +48,11 @@ Thus, decisions such as what information to share, and who to share it with, sho
 #### Don't judge, shame, or assume
 
 Humanity is incredibly diverse. Not only in terms of our individual preferences, but also in terms of what we and others consider taboo, sinful, cringe, or icky.  One should not be made afraid to be true to themselves when seeking a partner, so a service for all should not judge anyone for being themselves.
+
+
+### On purpose
+
+That is to say that the purpose of the service is to bring people together in long-lasting happy relationships.  So, from the sources of funding to the details of UX design, all decisions and policies should be assessed carefully to not diminish the pursuit of the ultimate goal.
 
 
 ### The design
