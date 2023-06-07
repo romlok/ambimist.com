@@ -33,7 +33,7 @@ Thus any the organisation in the position of managing this data should be open a
 
 In many places one's romantic and sexual preferences may be judged, shamed, or persecuted by societies or authorities.  Such oppressive powers would desire to access this information either by agreement or covert action.
 
-And event absent such social or state pressures, humans are imperfect.  Mistakes happen, wrong decisions can be made, and personal pressures can lead to acts of poor judgement.
+And even absent such social or state pressures, humans are imperfect.  Mistakes happen, wrong decisions can be made, and personal pressures can lead to acts of poor judgement.
 
 Thus, any organisation in charge of protecting all this personal data *should not be able to access the data*.  This means that it should be stored in an encrypted form where at all possible, with only the owner of the data choosing when and to whom it is shared.
 
@@ -50,9 +50,9 @@ Thus, decisions such as what information to share, and who to share it with, sho
 Humanity is incredibly diverse. Not only in terms of our individual preferences, but also in terms of what we and others consider taboo, sinful, cringe, or icky.  One should not be made afraid to be true to themselves when seeking a partner, so a service for all should not judge anyone for being themselves.
 
 
-### On purpose
+#### On purpose
 
-That is to say that the purpose of the service is to bring people together in long-lasting happy relationships.  So, from the sources of funding to the details of UX design, all decisions and policies should be assessed carefully to not diminish the pursuit of the ultimate goal.
+That is to say, that the purpose of the service is to bring people together in long-lasting happy relationships.  So, from the sources of funding to the details of UX design, all decisions and policies should be assessed carefully to not diminish the pursuit of the ultimate goal.
 
 
 ### The design
