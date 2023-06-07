@@ -30,7 +30,7 @@ Paying for premium features shares the same core flaw as the other revenue mecha
 
 All of these sources of revenue incentivise the companies to try and keep people using the apps, rather than fulfil the desire of the user to stop needing to use the app.
 
-Consequently, this drive to keep users around means that dating companies are incentivised to provide to users a large number of _superficially_ desirable "matches", to keep them hopeful and interested; but which have poor long-term compatibility, to keep users from leaving the app for long.  This is fine and very profitable for serving and encouraging a "hookup culture" of short-term casual flings, but fundamentally incompatible with the search for a long-term relationship.
+Consequently, this drive to keep users around means that dating companies are incentivised to provide to users a large number of _superficially_ desirable "matches", to keep them hopeful and interested, but who have poor long-term compatibility so users do not leave the app for long.  This is fine and very profitable for serving and encouraging a "hookup culture" of short-term casual flings, but fundamentally incompatible with the search for a long-term relationship.
 
 ### But... the testimonials!
 
@@ -49,7 +49,7 @@ We see then, that the sources of income available to a dating app are fundamenta
 
 The fix for the latter issue is clear and obvious; that for a dating app to ultimately be useful, it must be run by a non-profit entity which has the explicit purpose of helping find and foster long term relationships among people.
 
-But even non-profits need funding to develop and support the services they offer, so how could such an endeavour be financed, in a manner where the incentives do not undermine their mission?
+But even non-profits need funding to develop and support the services they offer.  So how could such an endeavour be financed, in a manner where the incentives do not undermine their mission?
 
 #### Investing in relationships
 
@@ -73,4 +73,4 @@ The current online dating industry is fundamentally broken for the goals they cl
 
 Any upstart competitor which actually prioritises the promise of getting people into lasting relationships above all, will necessarily be getting people out of the dating pool, and therefore out of the dating industry's potential paying user base.  Thus we should expect that the established industry powers will fight such a competitor tooth and nail, by fair means or foul, in the media, the courts, and the lobbies.
 
-So I hope that enough people with enough idealism, spite, grit, and determination come together to upend this industry, but I'm not optimistic.
+But I still hope that enough people with enough idealism, spite, grit, and determination come together to upend this corrupted industry.
