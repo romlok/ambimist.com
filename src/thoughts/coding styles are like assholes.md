@@ -7,15 +7,15 @@ You may be familiar with the idiom:
 
 > Opinions are like assholes; everyone has one, and they all stink
 
-And I also claim this of coding styles.  Why?  Because they claim it about themselves:
+And I claim this also of coding styles.  Why?  Because they claim it about themselves:
 
-![A selection of github projects describing themselves as "opinionated"](/img/opinionated-github-slide.png)
+![A selection of GitHub projects describing themselves as "opinionated"](/img/opinionated-github-slide.png)
 
 The above is a selection of code formatting and style projects on GitHub when you search for "opinionated".  These are _only_ projects relating to code style and formatting, and _only_ ones on GitHub.  There are many other opinionated projects out there, believe me!
 
 I have seen that not only these projects, but the wider software community, seem to use the word "opinionated" as a badge of honour.  As if it is a good and virtuous thing to be opinionated.  One of these projects even gave themselves a *trophy* for being opinionated!
 
-![A Go styleguide give themselves a trophy](/img/opinionated-github-trophy.png)
+![A Go styleguide gives itself a trophy](/img/opinionated-github-trophy.png)
 
 But if we think about the word, what does it mean to be opinionated?  It means to be biased, dogmatic, and arbitrary.  In fact, if you look up "opinionated" in a thesaurus, you will find a whole heap of words which you probably don't want to see associated with your project or its leadership!
 
@@ -37,11 +37,11 @@ We who write software like to call ourselves "Engineers", and the basis of what 
 
 ### Rust
 
-![[The Rust style team reforms](https://blog.rust-lang.org/inside-rust/2022/09/29/announcing-the-rust-style-team.html), Sept 2022](/img/rust-style-team.png)
+![[Rust Style Team assemble!](https://blog.rust-lang.org/inside-rust/2022/09/29/announcing-the-rust-style-team.html), Sept 2022](/img/rust-style-team.png)
 
 In the early years of the Rust programming language, the Rust Style Team was created to discuss and decide upon a consistent set of style guides for people writing in Rust.  Once the style guide was completed, and the team's job done, the group was disbanded.
 
-In the intervening years, the Rust language didn't sit still, with new features being added, and knowledge and practices being advanced.  So the [Coding Style Team was re-formed](https://blog.rust-lang.org/inside-rust/2022/09/29/announcing-the-rust-style-team.html) recently, to update their existing coding style to include guidance on how to use the new features of the language.
+In the intervening years, the Rust language didn't sit still, with new features being added, and knowledge and practices being advanced.  So the [Rust Style Team was re-formed](https://blog.rust-lang.org/inside-rust/2022/09/29/announcing-the-rust-style-team.html) to update the existing Rust coding style with guidance on how to use new features of the language.
 
 Since I was already thinking about this subject, I took a look at the announcement.  What I found, buried in their [RFC-3309](https://rust-lang.github.io/rfcs/3309-style-team.html), was this small ray of light:
 
