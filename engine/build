@@ -21,12 +21,22 @@ INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
-RESERVED_NAMES="src|engine|css|img|README"
+RESERVED_NAMES="src|engine|css|img|footer|README"
 DRAFT_PREFIX="DRAFT_"
+
+FOOTER_FILE="$SRC_PATH/footer.html"
 
 page_name() {
 	basename "$1" | cut -d. -f1 | sed -e "s/^$DRAFT_PREFIX//"
 }
+
+section_name() {
+	echo "$1" \
+		| xargs --null dirname \
+		| sed -e "s|^$SRC_PATH||" \
+		| xargs basename 2>/dev/null || echo ""
+}
+
 
 reserved_name() {
 	page_name "$1" \
@@ -40,6 +50,7 @@ index_name() {
 draft_name() {
 	basename "$1" | grep -e "^$DRAFT_PREFIX" >/dev/null
 }
+
 
 dir_indexable_files() {
 	source_path="$1"
@@ -128,6 +139,12 @@ cat "$PAGE_TEMPLATE" \
 	> "$SITE_PAGE_TEMPLATE"
 
 
+[ -f "$FOOTER_FILE" ] &&
+	cat "$FOOTER_FILE" \
+		| sed -i -e "/<FOOTER-CONTENT>/ { r /dev/stdin" -e ';d};' \
+			"$SITE_PAGE_TEMPLATE"
+
+
 echo "### Building main navigation"
 
 build_pages_nav() {
@@ -187,6 +204,24 @@ page_path() {
 	fi
 }
 
+page_title() {
+	source_file="$1"
+
+	section_title="$(section_name "$source_file" | capitalise)"
+
+	if ! index_name "$source_file"; then
+		# Regular file
+		echo "$(page_name "$source_file" | capitalise) | $SITE_NAME"
+	elif [ -z "$section_title" ]; then
+		# Root index file
+		echo "$SITE_NAME"
+	else
+		# Regular index file
+		echo "$section_title | $SITE_NAME"
+	fi
+}
+
+
 sub_page_vars() (
 	input_file="$1"
 
@@ -195,7 +230,6 @@ sub_page_vars() (
 	date_updated="$(git log --follow --find-renames=20% -n1 --author-date-order --date=local --pretty=format:"%as" -- "$input_file")"
 
 	sed \
-		-e "s/<SITE-NAME>/$SITE_NAME/g" \
 		-e "s/<DATE-CREATED>/$date_created/g" \
 		-e "s/<DATE-UPDATED>/$date_updated/g" \
 		</dev/stdin
@@ -235,12 +269,15 @@ build_history() (
 
 	mkdir -p "$output_path"
 
+	title="History | $(page_title "$source_path")"
+
 	build_history_items "$source_path" \
 		| sed -e "/<HISTORY-ITEMS>/ { r /dev/stdin" -e ';d};' \
 			-e "s|<HISTORY-TITLE>|$rel_output_path|g" \
 			"$HISTORY_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
+		| sed -e "s/<PAGE-TITLE>/$title/g" \
 		| sub_css \
 		| sub_page_vars "$source_path" \
 		> "$output_path/history.html"
@@ -297,6 +334,7 @@ build_file() (
 			| $converter \
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 				"$SITE_PAGE_TEMPLATE" \
+			| sed -e "s/<PAGE-TITLE>/$(page_title "$input_file")/g" \
 			| sub_css \
 			| sub_page_vars "$input_file" \
 			> "$output_index"
@@ -336,6 +374,7 @@ build_dir_index() (
 			"$INDEX_TEMPLATE" \
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
+		| sed -e "s/<PAGE-TITLE>/$(page_title "$source_path")/g" \
 		| sub_css \
 		| sub_page_vars "$source_path" \
 		> "$output_path/index.html"
