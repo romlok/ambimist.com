@@ -139,10 +139,20 @@ main {
 footer {
 	position: absolute;
 	bottom: 0;
+	display: flex;
+	justify-content: flex-end;
 	width: 100%;
 	padding: 1rem;
 	color: var(--secondary-color);
 	background-color: var(--secondary-bg-color);
+}
+footer a {
+	line-height: 0;
+	color: var(--secondary-color);
+}
+footer img {
+	height: 1em;
+	vertical-align: middle;
 }
 
 
