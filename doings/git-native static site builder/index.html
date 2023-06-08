@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>Sigh deeply and carry on</title>
+	<title>Git-native static site builder | Sigh deeply and carry on</title>
 	<link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
 <body>
@@ -23,7 +23,7 @@
 		</span>
 		<span class="item updated">
 			<span class="event">Updated</span>
-			<time class="time">2023-01-08</time>
+			<time class="time">2023-06-08</time>
 		</span>
 	</section>
 
@@ -90,15 +90,18 @@ will build all the HTML files for the site.</p>
 from the branch name. Or by the name of the nearest <code>git tag</code>
 in the branch history when the site is built.</p>
 <p>For each file and directory in <code>src/</code>, a directory will be
-created in the repository root, mirroring the structure. Each such
+created in the repository root mirroring the source structure. Each such
 directory will contain an <code>index.html</code> for the content of the
 page, and a <code>history.html</code> with a summary of the changelog of
 the page.</p>
 <p>For each file and directory in the <code>src/</code> root itself, an
 entry will be added to the site's main navigation.</p>
+<p>The exception to this is the file <code>src/footer.html</code> which,
+if it exists, is instead used to populate the footer block of every page
+of the site.</p>
 <p>Each <code>src</code> subdirectory which does not have an explicit
-<code>index.html</code> will have a simple index built. This provides a
-list of all the documents and any deeper subdirectories.</p>
+<code>index</code> will have a simple index built. This provides a list
+of all the documents and any deeper subdirectories.</p>
 <p>Any file whose name starts with <code>DRAFT_</code> will be built,
 but not automatically added to any index or navigation.</p>
 <p>The generated HTML code is static, and pre-defined by the engine.
@@ -110,6 +113,9 @@ directory will automatically be <code>link</code>ed in the HTML
 	</main>
 
 	<footer>
+<a href="https://toot.io/@ambimist">
+	<img alt="Mastodon" src="/img/mastodon-black.svg" />
+</a>
 	</footer>
 </body>
 </html>
