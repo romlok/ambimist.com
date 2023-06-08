@@ -21,7 +21,7 @@ INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
-RESERVED_NAMES="src|engine|css|README"
+RESERVED_NAMES="src|engine|css|img|README"
 DRAFT_PREFIX="DRAFT_"
 
 page_name() {
@@ -63,7 +63,11 @@ site_rel_path() {
 	echo "$1" | sed "s|^$SITE_PATH||"
 }
 
+
+#
 # Check environment
+#
+
 PANDOC="$(which pandoc || echo -n)"
 
 ext_to_converter() {
@@ -89,7 +93,10 @@ ext_to_converter() {
 }
 
 
+#
 # Derive site-wide parameters
+#
+
 capitalise() {
 	read val
 	echo -n "$val" | head -c1 | tr [:lower:] [:upper:]
@@ -153,6 +160,10 @@ for extant in *; do
 	rm -rfv "$extant"
 done
 
+
+#
+# Build the individual pages
+#
 
 echo "## Generating pages"
 
