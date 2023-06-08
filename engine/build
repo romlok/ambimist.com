@@ -21,8 +21,10 @@ INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
-RESERVED_NAMES="src|engine|css|img|README"
+RESERVED_NAMES="src|engine|css|img|footer|README"
 DRAFT_PREFIX="DRAFT_"
+
+FOOTER_FILE="$SRC_PATH/footer.html"
 
 page_name() {
 	basename "$1" | cut -d. -f1 | sed -e "s/^$DRAFT_PREFIX//"
@@ -135,6 +137,12 @@ echo "$SITE_PAGE_TEMPLATE"
 cat "$PAGE_TEMPLATE" \
 	| sed -e "s/<SITE-NAME>/$SITE_NAME/g" \
 	> "$SITE_PAGE_TEMPLATE"
+
+
+[ -f "$FOOTER_FILE" ] &&
+	cat "$FOOTER_FILE" \
+		| sed -i -e "/<FOOTER-CONTENT>/ { r /dev/stdin" -e ';d};' \
+			"$SITE_PAGE_TEMPLATE"
 
 
 echo "### Building main navigation"
