@@ -2,7 +2,7 @@
 	--content-color: #222;
 	--bg-color: #fff;
 	--secondary-color: #222;
-	--secondary-bg-color: #fd0;
+	--secondary-bg-color: #fc0;
 	--link-color: #840;
 }
 @media (prefers-color-scheme: dark) {
@@ -10,8 +10,8 @@
 		--content-color: #eee;
 		--bg-color: #222;
 		--secondary-color: #222;
-		--secondary-bg-color: #b90;
-		--link-color: #b90;
+		--secondary-bg-color: #c90;
+		--link-color: #c90;
 	}
 }
 
@@ -176,4 +176,25 @@ blockquote {
 code {
 	padding: 0.1em 0.2em;
 	opacity: 0.8;
+}
+
+figure {
+	margin: 0;
+	padding: 0.1em 0.4em;
+	overflow: hidden;
+	text-align: center;
+}
+figure > img {
+	max-width: 100%;
+}
+figure > figcaption {
+	font-size: 0.9em;
+	font-style: italic;
+}
+/* Images without captions don't get a `figure` */
+p > img:first-child:last-child {
+	display: block;
+	max-width: 100%;
+	margin: auto;
+	padding: 0.1em 0.4em;
 }
