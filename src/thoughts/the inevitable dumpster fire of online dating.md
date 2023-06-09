@@ -22,7 +22,7 @@ There are four main avenues of income for online dating services:
 
 Advertising requires people to be using the site or app. The more someone uses an app, the more advertisements they see, and the more money the company makes from them.  Thus ad-funded companies are clearly motivated to keep users in the app for as long as possible, looking around as much as possible.
 
-Paying for features necessary for the user to actually succeed in finding a partner means that the company profits more the longer users stay on the app, are engaged with the app's features, but are ultimately unsuccessful in finding a partner.
+Paying for features necessary for the user to actually succeed in finding a partner means that the company profits more the longer users stay on the app, are engaged with the app's features, but are ultimately unsuccessful in finding a partner.  It should be no surprise then, that many services which put such basic functionality behind a paywall [explicitly engange in catfishing of their own customers](https://arstechnica.com/culture/2023/05/this-is-catfishing-on-an-industrial-scale/)?
 
 Similarly, paying for digital "gifts" to send to other users produces more profit when users who send these gifts are unsuccessful in attracting or sustaining the recipient's attention, so must continue using the app, and perhaps buying more such gifts.
 
