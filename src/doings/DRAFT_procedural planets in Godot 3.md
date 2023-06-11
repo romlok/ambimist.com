@@ -4,7 +4,7 @@
 
 After experiencing a craving to return to [Shores of Hazeron](https://hazeron.com) and finding that it was no longer active, my first instinct was of course to think about how I would go about making something similar, and what I would do differently.
 
-Having lived for some time within the Arctic circle, one thing that bugged me about Hazeon was that its planetary terrain used a mesh based on meridians and parallels - lines of latitude and longitude.  This appears to be the most common way of representing spheres as meshes in 3D tools, but means that mesh faces get narrower and narrower toward the poles, resulting in procedural terrain becoming ever more sharp and jagged and, in the context of Hazeron, too narrow to build on.
+Having lived for some time within the Arctic circle, one thing that bugged me about Hazeon was that its planetary mesh used a [UV sphere](https://en.wikipedia.org/wiki/UV_sphere).  That is, a mesh based on meridians and parallels - lines of latitude and longitude.  This appears to be the most common way of representing spheres as meshes in 3D tools, but means that mesh faces get narrower and narrower toward the poles, resulting in procedural terrain appearing ever more sharp and jagged and, in the context of Hazeron, too narrow to build on.
 
 <!-- TODO: Get screenshot of Hazeron poles here? -->
 
@@ -53,13 +53,13 @@ To prevent these visible flanges looking like sheer cliffs, each surface face on
 
 ### A terrestrial twin
 
-While a dynamically subdividing, undulating icosphere is technically impressive (at least to me), a solid green lump doesn't feel very planet-y.  So my next step was to add some variation in the surface.
+While a dynamically subdividing, undulating icosphere is technically impressive (at least to me), a solid green lump doesn't feel very planet-y.  So my next step was to add some variation to the surface appearance.
 
 Firstly, I added a sea.  This was merely an additional mesh layer for each chunk, which didn't have the procedural height map applied to it.  With an appropriate texture, this produces a global sea at the average terrain height.
 
-With the water in place, the next step was to give any surface face which was partly or mostly underwater a yellow sand texture.
+With the water in place, the next step was to give any surface face which was partly or mostly underwater a yellow sandy texture.
 
-Then, since you can't have a terrestrial twin without snow-capped mountains, so any surface face above a particular (arbitrary) height was turned white.
+Then, since you can't have a terrestrial twin without snow-capped mountains, any surface face above a particular (arbitrary) height was turned white.
 
 Finally, for the heck of it, any surface face steeper than a certain (arbitrary) angle was textured as rock - on the basis that it's too steep for either soil, sand, or snow to settle.
 
@@ -73,22 +73,60 @@ Tinkering with the various values and algorithms which determined these biomes b
 
 ### To boldy go
 
-When your inspiration is an intergalactic sandbox, and you have a single procedural planet, the most obvious next step is to reach further out into the solar system.
+When your inspiration is an intergalactic sandbox, and you have created a single procedural planet, the most obvious next step is to reach further out into the solar system.
 
-However, Godot uses 32-bit values for `Vector3`, which is fine for the scale of most games, but when wanting to simultaneously render both the ground at your feet, and planetary bodies millions of kilometers away, you start facing issues of floating point precision.  One can compile Godot with 64-bit float support, which can handle solar-system-scales with millimetre precision, but this only became fully implemented engine-wide in Godot 4, so alternative workarounds were required.
+One stumbling block to this however, is that Godot uses 32-bit values for `Vector3` coordinates.  This is fine for the scale of most games, but when wanting to simultaneously render both the ground at your feet, and planetary bodies millions of kilometers away, you start facing issues of floating point precision.  One can compile Godot with 64-bit float support, which can handle solar-system-scales with millimetre precision, but this only became fully implemented engine-wide in Godot 4, so alternative workarounds were required.
 
 #### Distant impostors
 
-<!-- TODO: Chunks get jiggy at a distance -->
+<!-- TODO: Screenshot/video of distant chunks fighting? -->
+
+When venturing into the depths of space, one issue that soon arose was that the inaccuracies of floating point precision caused something akin to Z-fighting between neighbouring chunks on the planet, and actual Z-fighting between the land and the seas of the surface.
+
+The solution to this was to create a `DistantWorld` class which, rather than using chunks, provided a single subdivided icosphere mesh, suitably textured for the appropriate biomes.  A single mesh can be rendered more far consistently than multiple touching meshes.
+
+<!-- TODO: Screenshot of a DistantWorld -->
+
+Using a LOD addon downloaded from within Godot (and slightly tweaked for the project's needs), beyond a certain distance the chunk-y world would be hidden, and the distant impostor shown in its stead.  Depending on the desired detail level, this could happen at a far smaller distance than would trigger any precision issues.
 
 #### Floating origin
 
-<!-- TODO: *I* get jiggy at a distance -->
+A second issue with 32-bit accuracy at solar-system-scale environments is that if the player themselves (or rather, the camera) gets too far from the origin, nothing around the player can be positioned accurately.
 
-### I am the centre of the universe
+A common solution to this problem is to use a floating origin (aka origin shifting), to keep the player/camera relatively close to `(0, 0)`.  The name suggests that the origin of a scene is moved to a new position, but the technical reality is instead that everything in the game environment is teleported instantaneously to new coordinates at certain times.
 
-<!-- TODO: Sun -->
+For this project, I positioned the origin at the centre of the local planetary body when the player was close by, or else an abstract `Space` object, which provided a local coordinate system centered around where the player was when they left the previous point of reference.
+
+It should be noted that, using the planet centre as the origin is only really suitable for small planets (the one in this project is 1/100 Earth scale), and because there are no small-scale objects to render.  For larger worlds, floating the origin based on transitions from chunk to chunk may be more appropriate.
+
+#### The centre of the universe
+
+When it came to adding a sun to the scene, I encountered two problems.
+
+The first issue was that camera near and far clip - the minimum and maximum distance an object can be rendered at for a given camera - are bound together.  There is only ever a limited range between the two values, so to be able to render a far distant sun, one would have to sacrifice being able to see the first several kilometres in front of oneself!
+
+One solution would be to have two cameras - the main camera to capture the nearby environment, and a second one to capture the far distant objects.  The distance camera's output can then be used as a backdrop for the main camera.
+
+For simplicity's sake, I chose instead to just make the sun smaller, and move it within the normal rendering distance of the camera!
+
+This decision then led to a second issue:  If one moved far enough laterally, the sun's apparent position no longer matched the direction of the light source - which, since the sun is _supposed_ to be very far away, was implemented as a `DirectionalLight`.
+
+To solve this, I placed the sun in a `CelestialSphere`, a node which tracked the active camera position, thus seeming to hold all its children at a fixed location in the sky.
 
 ### Not because it is easy
 
-<!-- TODO: Moon! -->
+Since my planet was to be a terrestrial twin, it of course needed a lunar twin.  Thus the second `World` was added to the scene, so one could see and travel between them.
+
+<!-- TODO: Lunar video -->
+
+Clearly, a lunar twin can't use the same biomes and procedural terrain generation as a terrestrial twin, so I developed a system where each `World` was generated based on data aggregated from child nodes - allowing combining multiple types of surface features into a single procedural surface.
+
+<!-- TODO: Show node tree -->
+
+## Gotta go fast
+
+Since this was an experimental project, not much emphasis was placed on speed and optimisation.  However, not much emphasis was found to be necessary for the given project scope.
+
+One can see from the videos that, aside from direct teleportation to the vicinity of large ungenerated areas, there isn't much if any lag even when procedural generation is running on a single thread of a mere i5!
+
+The only explicit optimisation I implemented was to cache terrain height vertex coordinates.  The same vertex coordinates were frequently being reused when generating chunk meshes, so caching these coordinates saved multiple calls to the noise algorithms each time a chunk was created.
