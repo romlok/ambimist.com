@@ -1,4 +1,4 @@
-The following is adapted and expanded from a talk I gave in November 2022 at an internal developers conference for the company I work for.  I'd been thinking a lot about coding styles, and had had an insight that I wanted to share.
+The following is adapted and expanded from a talk I gave in November 2022 at an internal developers conference for the company I worked for.  I'd been thinking a lot about coding styles, and had had an insight that I wanted to share.
 
 
 ## Coding styles are like assholes
