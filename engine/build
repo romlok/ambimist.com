@@ -21,7 +21,7 @@ INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
-RESERVED_NAMES="src|engine|css|img|footer|README"
+RESERVED_NAMES="src|engine|css|img|footer|README|CNAME"
 DRAFT_PREFIX="DRAFT_"
 
 FOOTER_FILE="$SRC_PATH/footer.html"
