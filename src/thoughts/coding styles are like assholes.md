@@ -85,7 +85,7 @@ Here we have some Clojure(Script) source code - blurred so we focus only on the 
 
 The odd one out is actually the first code block, yet we can't tell that from its shape.  When reading this code, to understand the nature of each block, to understand what kind of concept the code represents, we have to stop, read, and parse at least the first line of each block.
 
-For reference, this is code written according to the [Re-Frame framework](https://github.com/day8/re-frame).  The block on the left represents what is known as a subscription, while the two on the right represent event handlers.
+For reference, this is code written according to the [Re-Frame framework](https://github.com/day8/re-frame).  The first block represents what is known as a subscription, while the bottom two represent event handlers.
 
 The reason I chose this particular example is because the middle and bottom code blocks, which are visually distinct from each other, in fact provide *the exact same* functionality!  The middle block makes use of a convenience function intended to reduce the need for boilerplate, but in doing so it directs the visual shape of the resultant code toward being indistinguishable from a something which is conceptually very different!
 
