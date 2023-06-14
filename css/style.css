@@ -175,6 +175,10 @@ h3 {
 	border-top: 1em solid var(--secondary-bg-color);
 	padding-top: 1em;
 }
+h4 {
+	border-top: 0.2em solid var(--secondary-bg-color);
+	padding-top: 0.5em;
+}
 
 p {
 	margin: 1rem 0;
