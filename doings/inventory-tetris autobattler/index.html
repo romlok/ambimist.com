@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Inventory-tetris autobattler | Deep sigh and carry on</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+	<header>
+		<h1><a href="/">Deep sigh and carry on</a></h1>
+	</header>
+
+	<nav aria-labelledby="primary">
+<a href="/doings">Doings</a>
+<a href="/thoughts">Thoughts</a>
+	</nav>
+
+	<section id="page-history">
+		<a href="history.html">History</a>
+		<span class="item created">
+			<span class="event">Created</span>
+			<time class="time">2023-06-14</time>
+		</span>
+		<span class="item updated">
+			<span class="event">Updated</span>
+			<time class="time">2023-06-14</time>
+		</span>
+	</section>
+
+	<main>
+<h2 id="inventory-tetris-autobattler">Inventory-tetris autobattler</h2>
+<p>Watching streamers play <a
+href="https://www.escapefromtarkov.com/">Escape from Tarkov</a> and
+seeing how much time they spent sorting and rearranging their inventory,
+when compared to time spent actually playing the game, it inspired me to
+wonder "what if sorting the inventory <em>was</em> the game? What if the
+raids were just played out automatically?"</p>
+<p>It seems like Resident Evil fans are all over inventory organisation,
+with games like <a
+href="https://store.steampowered.com/app/1955330/Save_Room__Organization_Puzzle/">Save
+Room</a>, and <a
+href="https://old.reddit.com/r/residentevil/comments/uxqjvg/resident_evil_4_tetris_edition_fangame_i_made/">random
+fan games with falling blocks</a>. And then there is <a
+href="https://thejaspel.itch.io/backpack-hero">Backpack Hero</a>, which
+successfully combines inventory organisation with an auto-battler.
+However, I could find no game which combined the challenge of arranging
+Tetris-like falling shapes with the metagame of an autobattler.</p>
+<h3 id="the-story-so-far">The story so far</h3>
+<p><img src="/img/bag-of-holding/inventory.gif" /></p>
+<p>I decided on a fantasy medieval setting, so that the autobattler part
+could be a well-understood dungeon crawl; and on a low-poly 2D style,
+since it's simple and fast to make programmer art for!</p>
+<p>The primary gameplay loop so far superficially resembles the Tetris
+arrangement, where the player has a game grid into which shapes fall
+(the bag), and a queue displaying the shape/s that are to be deposited
+in the game grid.</p>
+<p>Whereas in the case of Tetris the next shape/s are determined
+directly, at random or by some algorithm, the shapes to be delivered to
+the bag in this game are determined by the procession of the autobattler
+element. This is still random at its root, but provides the potential
+for the player to influence the generation of shapes in an intuitive
+manner.</p>
+<p>In the current prototype, the game ends when the bag inevitably
+overflows. The intent is for this to be a neutral or successful ending,
+since the bag overflowing indicates to the autobattling hero that
+there's no more space for loot and it's time to leave and go sell it.
+Other endings are intended to be added, such as hero death or boss
+defeat.</p>
+<div style="position: relative; padding-top: 56.25%;">
+<iframe title="Inventory-tetris autobattler prototype" src="https://spectra.video/videos/embed/79282256-de3f-4c2b-908c-161441678931?warningTitle=0&amp;p2p=0" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups" style="position: absolute; inset: 0px;" width="100%" height="100%" frameborder="0">
+</iframe>
+</div>
+<h3 id="to-be-implemented">To be implemented</h3>
+<p>The project got shelved (again) after I got to this prototype stage,
+but I have developed not so much a plan as a set of ideas for making
+this into a more complete game.</p>
+<h4 id="time-pressure">Time pressure</h4>
+<figure>
+<img src="/img/bag-of-holding/loot.gif" alt="l00t!" />
+<figcaption aria-hidden="true">l00t!</figcaption>
+</figure>
+<p>Tetris and the like become more challenging as one proceeds, by
+gradually increasing how quickly shapes fall. I wanted to include this
+aspect of challenge, but to also tie it to the autobattler aspect -
+punishing players for dawdling, rather than merely for playing well.</p>
+<p>Thus, the plan is for the speed of items falling to be affected by
+the number of items waiting in the queue - beyond a certain point, the
+more pending items in the queue, the faster items fall in the bag, and
+the more the player needs to act quickly to prevent overflowing.</p>
+<h4 id="opening-the-bag">Opening the bag</h4>
+<p><img src="/img/bag-of-holding/potion.png" /></p>
+<p>I toyed with ideas of how the <del>Tetris</del> <em>legally distinct
+falling shape puzzle</em> aspect could work, since there needs to be a
+way for items to <em>leave</em> the bag, for dungeon crawls to last more
+than a couple of minutes.</p>
+<p>I considered Tetris-like destruction of filled lines, but
+"destroying" parts of items 1. didn't mesh well with the idea that the
+hero's going to be selling this stuff; and 2. would require a
+significant rewrite as to how equipment was implemented in game.</p>
+<p>One related alternative was that only whole items could be sent to
+the void. I could only see two ways of this working however: either an
+item is removed when it contributes to a finished line; or an item is
+removed only when all the lines it contributes to are finished.
+Unfortunately, I see the former as being far too easy to clear the bag,
+and the latter as far too difficult!</p>
+<p>Another alternative I considered was for sharp items like swords to
+be able to cut holes in the bag itself, letting items fall out! This
+would make placement and orientation of items even more meaningful,
+which appeals to me, but feels like it could make the gameplay too
+chaotic and prone to catastrophic errors, and detract from the
+organisational aspect.</p>
+<p><img src="/img/bag-of-holding/big_axe.png" /></p>
+<p>Additionally, all of these options flew in the face of another
+gameplay aspect I wanted to adopt - that the player can nudge the
+behaviour of the hero by having them take an item (weapon, healing
+potion, etc.) out of the bag to use.</p>
+<p>Thus, being able to physically lift items out of the bag, as a
+reversal of the dropping mechanism, was considered. However, this
+conflicts and interferes with the gameplay loop of items constantly
+falling, and the time/speed pressure that can be applied there. Further,
+without some kind of physics implementation, only the topmost layer of
+items could be lifted, limiting the organisational strategies available
+to the player.</p>
+<p>So the current plan is simply to use magic! The player will highlight
+an item that has settled in the bag, prompting the hero to pull it out
+when they have a chance. At that point the item will simply disappear
+from the bag, and items above it in the game grid will start falling
+again, and/or leave awkward spaces. This adds the gameplay dimension
+that the player needs to consider possible future removal of items when
+organising the bag content!</p>
+<h4 id="combat">Combat</h4>
+<figure>
+<img src="/img/bag-of-holding/fight.gif"
+alt="Godot vs Goblot, the eternal conflict" />
+<figcaption aria-hidden="true">Godot vs Goblot, the eternal
+conflict</figcaption>
+</figure>
+<p>Right now, combat in the prototype is just a time sink. The hero is
+currently invulnerable, and the two types of enemy are destined to die
+in a predetermined number of hits. However, the primary challenge of the
+game is intended to be that of influencing the hero to keep them alive,
+so we want there to be risk to the combat.</p>
+<p>Since the basic combat is and will be automatic, the player's primary
+interaction will be through item use. This will mean things like
+switching weapons, drinking potions, or even offering bribes to avoid
+fighting entirely!</p>
+<h4 id="exploration">Exploration</h4>
+<p><img src="/img/bag-of-holding/rocks.png" /></p>
+<p>The prototype's dungeon is linear, but branching could be added with
+the inclusion of keys and side-doors. For example, the player uses a key
+as the hero is approaching a side-door, and instead of continuing on the
+current path, the hero will unlock and enter a door to a different
+region of the dungeon.</p>
+<h4 id="metagame">Metagame</h4>
+<p><img src="/img/bag-of-holding/coin.png" /></p>
+<p>Apparently every autobattler needs metagame progression, and this
+concept seems rife with possibilities for variations and progression:
+hero classes, hero traits, starting equipment, bag size, queue size,
+etc.</p>
+<p>Whew, talk about scope creep!</p>
+	</main>
+
+	<footer>
+<a rel="me" href="https://toot.io/@ambimist">
+	<img alt="Mastodon" src="/img/mastodon-black.svg" />
+</a>
+	</footer>
+</body>
+</html>
