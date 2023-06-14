@@ -123,7 +123,7 @@ Clearly, a lunar twin can't use the same biomes and procedural terrain generatio
 
 ![The nodetree used for the world and its moon](/img/godot-planets/nodetree.png)
 
-## Gotta go fast
+### Gotta go fast
 
 Since this was an experimental project, not much emphasis was placed on speed and optimisation.  However, not much emphasis was found to be necessary for the given project scope.
 
