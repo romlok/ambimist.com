@@ -24,7 +24,7 @@
 		</span>
 		<span class="item updated">
 			<span class="event">Updated</span>
-			<time class="time">2023-06-08</time>
+			<time class="time">2023-06-15</time>
 		</span>
 	</section>
 
@@ -90,27 +90,46 @@ will build all the HTML files for the site.</p>
 <p>The name of the new site, displayed in the site header, will be taken
 from the branch name. Or by the name of the nearest <code>git tag</code>
 in the branch history when the site is built.</p>
+<h4 id="pages">Pages</h4>
 <p>For each file and directory in <code>src/</code>, a directory will be
 created in the repository root mirroring the source structure. Each such
 directory will contain an <code>index.html</code> for the content of the
 page, and a <code>history.html</code> with a summary of the changelog of
 the page.</p>
-<p>For each file and directory in the <code>src/</code> root itself, an
-entry will be added to the site's main navigation.</p>
-<p>The exception to this is the file <code>src/footer.html</code> which,
-if it exists, is instead used to populate the footer block of every page
-of the site.</p>
 <p>Each <code>src</code> subdirectory which does not have an explicit
 <code>index</code> will have a simple index built. This provides a list
 of all the documents and any deeper subdirectories.</p>
 <p>Any file whose name starts with <code>DRAFT_</code> will be built,
 but not automatically added to any index or navigation.</p>
-<p>The generated HTML code is static, and pre-defined by the engine.
-Customisation of the site design, therefore, is done entirely through
+<h4 id="error-pages">Error pages</h4>
+<p>For compatibility with eg. GitHub Pages, source files whose name
+without extention is three digits (<code>[0-9]{3}</code>) will be
+treated specially. The index of such pages will not be placed in the
+page's subdirectory, but will mirror the location and name of the source
+file itself.</p>
+<p>Eg. the file <code>src/404.md</code> will result in
+<code>404.html</code> being built in the site root. However, it will
+still have and link to a <code>404/history.html</code> file.</p>
+<h4 id="customising-the-design">Customising the design</h4>
+<p>The generated HTML code is static, and mostly pre-defined by the
+engine. Customisation of the site design, therefore, is done through
 CSS. This is achieved by creating <code>.css</code> files in a
 <code>css</code> directory in the repository root. Any files in this
 directory will automatically be <code>link</code>ed in the HTML
 <code>head</code> of every page.</p>
+<p>The page footer can be customised by providing a
+<code>src/footer.html</code>, the content of which will be inserted into
+the <code>&lt;footer&gt;</code> element of every page.</p>
+<h4 id="navigation">Navigation</h4>
+<p>With some exceptions, for each file and directory in the
+<code>src/</code> root itself, an entry will be added to the site's main
+navigation.</p>
+<p>The exceptions are:</p>
+<ol type="1">
+<li>Directories which are empty or contain only drafts.</li>
+<li>Numeric error pages, as described above.</li>
+<li>The file <code>src/footer.html</code>, as described above.</li>
+</ol>
 	</main>
 
 	<footer>
