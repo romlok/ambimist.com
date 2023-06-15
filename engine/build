@@ -38,16 +38,16 @@ section_name() {
 }
 
 
-reserved_name() {
+is_reserved_name() {
 	page_name "$1" \
 		| grep -xE "$RESERVED_NAMES" >/dev/null
 }
 
-index_name() {
+is_index_name() {
 	[ "$(page_name "$1")" = "index" ]
 }
 
-draft_name() {
+is_draft_name() {
 	basename "$1" | grep -e "^$DRAFT_PREFIX" >/dev/null
 }
 
@@ -56,13 +56,13 @@ dir_indexable_files() {
 	source_path="$1"
 
 	for source_file in "$source_path"/*; do
-		reserved_name "$source_file" && continue
-		draft_name "$source_file" && continue
+		is_reserved_name "$source_file" && continue
+		is_draft_name "$source_file" && continue
 		echo "$source_file"
 	done
 }
 
-empty_src_dir() {
+is_empty_src_dir() {
 	source_path="$1"
 	[ ! -d "$source_path" ] && return 1
 	[ -n "$(dir_indexable_files "$source_path")" ] && return 1
@@ -149,10 +149,10 @@ echo "### Building main navigation"
 
 build_pages_nav() {
 	for page_file in "$SRC_PATH"/*; do
-		reserved_name "$page_file" && continue
-		draft_name "$page_file" && continue
-		index_name "$page_file" && continue
-		empty_src_dir "$page_file" && continue
+		is_reserved_name "$page_file" && continue
+		is_draft_name "$page_file" && continue
+		is_index_name "$page_file" && continue
+		is_empty_src_dir "$page_file" && continue
 
 		name="$(page_name "$page_file")"
 		url="/$name"
@@ -172,7 +172,7 @@ build_pages_nav \
 echo "## Removing previous files"
 cd "$SITE_PATH"
 for extant in *; do
-	reserved_name "$extant" && continue
+	is_reserved_name "$extant" && continue
 
 	rm -rfv "$extant"
 done
@@ -209,7 +209,7 @@ page_title() {
 
 	section_title="$(section_name "$source_file" | capitalise)"
 
-	if ! index_name "$source_file"; then
+	if ! is_index_name "$source_file"; then
 		# Regular file
 		echo "$(page_name "$source_file" | capitalise) | $SITE_NAME"
 	elif [ -z "$section_title" ]; then
@@ -257,7 +257,7 @@ build_history_items() (
 build_history() (
 	source_path="$1"
 
-	reserved_name "$source_path" && return 0
+	is_reserved_name "$source_path" && return 0
 
 	echo "#### History page"
 
@@ -311,13 +311,13 @@ sub_css() (
 build_file() (
 	input_file="$1"
 
-	reserved_name "$input_file" && return 0
+	is_reserved_name "$input_file" && return 0
 
 	output_path="$(page_path "$input_file")"
 	output_index="$output_path/index.html"
 	
 	rel_output_path="$(site_rel_path "$output_path")"
-	if index_name "$input_file"; then
+	if is_index_name "$input_file"; then
 		rel_output_path="$rel_output_path/index"
 	fi
 	echo "### $rel_output_path"
@@ -390,7 +390,7 @@ build_dir() (
 		if [ -d "$source_file" ]; then
 			build_dir "$source_file"
 		else
-			if index_name "$source_file"; then
+			if is_index_name "$source_file"; then
 				indexed="yup"
 			fi
 			build_file "$source_file"
