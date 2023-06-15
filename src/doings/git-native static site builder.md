@@ -48,14 +48,32 @@ To create a new website, one simply needs to branch from `master` and start writ
 
 The name of the new site, displayed in the site header, will be taken from the branch name. Or by the name of the nearest `git tag` in the branch history when the site is built.
 
+#### Pages
+
 For each file and directory in `src/`, a directory will be created in the repository root mirroring the source structure.  Each such directory will contain an `index.html` for the content of the page, and a `history.html` with a summary of the changelog of the page.
-
-For each file and directory in the `src/` root itself, an entry will be added to the site's main navigation.
-
-The exception to this is the file `src/footer.html` which, if it exists, is instead used to populate the footer block of every page of the site.
 
 Each `src` subdirectory which does not have an explicit `index` will have a simple index built.  This provides a list of all the documents and any deeper subdirectories.
 
 Any file whose name starts with `DRAFT_` will be built, but not automatically added to any index or navigation.
 
-The generated HTML code is static, and pre-defined by the engine.  Customisation of the site design, therefore, is done entirely through CSS.  This is achieved by creating `.css` files in a `css` directory in the repository root.  Any files in this directory will automatically be `link`ed in the HTML `head` of every page.
+#### Error pages
+
+For compatibility with eg. GitHub Pages, source files whose name without extention is three digits (`[0-9]{3}`) will be treated specially.  The index of such pages will not be placed in the page's subdirectory, but will mirror the location and name of the source file itself.
+
+Eg. the file `src/404.md` will result in `404.html` being built in the site root.  However, it will still have and link to a `404/history.html` file.
+
+#### Customising the design
+
+The generated HTML code is static, and mostly pre-defined by the engine.  Customisation of the site design, therefore, is done through CSS.  This is achieved by creating `.css` files in a `css` directory in the repository root.  Any files in this directory will automatically be `link`ed in the HTML `head` of every page.
+
+The page footer can be customised by providing a `src/footer.html`, the content of which will be inserted into the `<footer>` element of every page.
+
+#### Navigation
+
+With some exceptions, for each file and directory in the `src/` root itself, an entry will be added to the site's main navigation.
+
+The exceptions are:
+
+1. Directories which are empty or contain only drafts.
+2. Numeric error pages, as described above.
+3. The file `src/footer.html`, as described above.
