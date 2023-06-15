@@ -21,6 +21,7 @@ INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
+# Reserved names don't get deleted or built as pages
 RESERVED_NAMES="src|engine|css|img|footer|README|CNAME"
 DRAFT_PREFIX="DRAFT_"
 
@@ -51,13 +52,23 @@ is_draft_name() {
 	basename "$1" | grep -e "^$DRAFT_PREFIX" >/dev/null
 }
 
+is_error_name() {
+	basename "$1" \
+		| cut -d"." -f1 \
+		| grep -e "^[0-9]\{3\}$" >/dev/null
+}
+
 
 dir_indexable_files() {
 	source_path="$1"
 
+	# Explicitly check empty dir, as * below doesn't work as expected
+	[ -z "$(ls "$source_path")" ] && return 0
+
 	for source_file in "$source_path"/*; do
 		is_reserved_name "$source_file" && continue
 		is_draft_name "$source_file" && continue
+		is_error_name "$source_file" && continue
 		echo "$source_file"
 	done
 }
@@ -148,9 +159,7 @@ cat "$PAGE_TEMPLATE" \
 echo "### Building main navigation"
 
 build_pages_nav() {
-	for page_file in "$SRC_PATH"/*; do
-		is_reserved_name "$page_file" && continue
-		is_draft_name "$page_file" && continue
+	dir_indexable_files "$SRC_PATH" | while read -r page_file; do
 		is_index_name "$page_file" && continue
 		is_empty_src_dir "$page_file" && continue
 
@@ -197,12 +206,44 @@ page_path() {
 	name="$(page_name "$source_file")"
 	rel_path="$(dirname "$source_file" | sed -e "s|^$SRC_PATH/\?||")"
 
-	if [ "index" = "$name" ]; then
+	if is_index_name "$source_file" ]; then
 		readlink -m "$SITE_PATH/$rel_path"
 	else
 		readlink -m "$SITE_PATH/$rel_path/$name"
 	fi
 }
+
+
+page_index_file() {
+	source_file="$1"
+
+	output_path="$(page_path "$source_file")"
+	output_index="$output_path/index.html"
+
+	if is_error_name "$source_file"; then
+		# Error handlers, eg. 404 need to be at a root'ier level
+		output_index="$(dirname "$output_path")/$(page_name "$input_file").html"
+	fi
+
+	readlink -m "$output_index"
+}
+
+page_history_file() {
+	source_file="$1"
+
+	readlink -m "$(page_path "$source_file")/history.html"
+}
+
+relative_url() {
+	source="$1"
+	target="$2"
+
+	if is_index_name "$target"; then
+		target="$(dirname "$target")"
+	fi
+	realpath --relative-to "$(dirname "$source")" "$target"
+}
+
 
 page_title() {
 	source_file="$1"
@@ -261,7 +302,8 @@ build_history() (
 
 	echo "#### History page"
 
-	output_path="$(page_path "$source_path")"
+	output_file="$(page_history_file "$source_path")"
+	output_path="$(dirname "$output_file")"
 	rel_output_path="$(site_rel_path "$output_path")"
 	if [ -z "$rel_output_path" ]; then
 		rel_output_path="/"
@@ -270,6 +312,10 @@ build_history() (
 	mkdir -p "$output_path"
 
 	title="History | $(page_title "$source_path")"
+	page_url="$(relative_url \
+		"$output_file" \
+		"$(page_index_file "$source_path")" \
+		)"
 
 	build_history_items "$source_path" \
 		| sed -e "/<HISTORY-ITEMS>/ { r /dev/stdin" -e ';d};' \
@@ -278,9 +324,11 @@ build_history() (
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
 		| sed -e "s/<PAGE-TITLE>/$title/g" \
+		| sed -e "s|<PAGE-URL>|$page_url|g" \
+		| sed -e "s|<HISTORY-URL>||g" \
 		| sub_css \
 		| sub_page_vars "$source_path" \
-		> "$output_path/history.html"
+		> "$output_file"
 )
 
 
@@ -314,8 +362,8 @@ build_file() (
 	is_reserved_name "$input_file" && return 0
 
 	output_path="$(page_path "$input_file")"
-	output_index="$output_path/index.html"
-	
+	output_index="$(page_index_file "$input_file")"
+
 	rel_output_path="$(site_rel_path "$output_path")"
 	if is_index_name "$input_file"; then
 		rel_output_path="$rel_output_path/index"
@@ -323,6 +371,11 @@ build_file() (
 	echo "### $rel_output_path"
 
 	mkdir -p "$output_path"
+
+	history_url="$(relative_url \
+		"$output_index" \
+		"$(page_history_file "$input_file")" \
+		)"
 
 	extension="$(basename "$input_file" | cut -d. -f2)"
 	converter="$(ext_to_converter "$extension")"
@@ -335,6 +388,7 @@ build_file() (
 			| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 				"$SITE_PAGE_TEMPLATE" \
 			| sed -e "s/<PAGE-TITLE>/$(page_title "$input_file")/g" \
+			| sed -e "s|<HISTORY-URL>|$history_url|g" \
 			| sub_css \
 			| sub_page_vars "$input_file" \
 			> "$output_index"
@@ -368,6 +422,11 @@ build_dir_index() (
 	rel_output_path="$(site_rel_path "$output_path")"
 	echo "### $rel_output_path/index"
 
+	history_url="$(relative_url \
+		"$(page_index_file "$source_path")" \
+		"$(page_history_file "$source_path")" \
+		)"
+
 	build_dir_index_items "$source_path" \
 		| sed -e "/<INDEX-ITEMS>/ { r /dev/stdin" -e ';d};' \
 			-e "s/<INDEX-TITLE>/$dir_name/g" \
@@ -375,6 +434,7 @@ build_dir_index() (
 		| sed -e "/<PAGE-CONTENT>/ { r /dev/stdin" -e ';d};' \
 			"$SITE_PAGE_TEMPLATE" \
 		| sed -e "s/<PAGE-TITLE>/$(page_title "$source_path")/g" \
+		| sed -e "s|<HISTORY-URL>|$history_url|g" \
 		| sub_css \
 		| sub_page_vars "$source_path" \
 		> "$output_path/index.html"
@@ -388,6 +448,8 @@ build_dir() (
 
 	for source_file in "$source_path"/*; do
 		if [ -d "$source_file" ]; then
+
+			[ -z "$(ls "$source_file")" ] && continue
 			build_dir "$source_file"
 		else
 			if is_index_name "$source_file"; then
