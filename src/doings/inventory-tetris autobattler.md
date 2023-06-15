@@ -18,6 +18,8 @@ In the current prototype, the game ends when the bag inevitably overflows.  The 
 
 <div style="position: relative; padding-top: 56.25%;"><iframe title="Inventory-tetris autobattler prototype" src="https://spectra.video/videos/embed/79282256-de3f-4c2b-908c-161441678931?warningTitle=0&amp;p2p=0" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups" style="position: absolute; inset: 0px;" width="100%" height="100%" frameborder="0"></iframe></div>
 
+For those wanting to try it out for themselves, I've made the prototype's executables available as [Bag of Holding on Itch](https://romlok.itch.io/bagofholding), though I've only been able to personally test the Linux binary, so YMMV.
+
 ### To be implemented
 
 The project got shelved (again) after I got to this prototype stage, but I have developed not so much a plan as a set of ideas for making this into a more complete game.
