@@ -19,7 +19,7 @@ I have seen that not only these projects, but the wider software community, seem
 
 But if we think about the word, what does it mean to be opinionated?  It means to be biased, dogmatic, and arbitrary.  In fact, if you look up "opinionated" in a thesaurus, you will find a whole heap of words which you probably don't want to see associated with your project or its leadership!
 
-Opinions are divisive, precisely because they are personal and arbitrary.  And when arbirary opinions differ, there can be no resolution but enforcement by authority.  This leads to resentment and division, and is a fuel of the "holy wars" that exist and persist in programming and technology circles.
+Opinions are divisive, precisely because they are personal and arbitrary.  And when arbitrary opinions differ, there can be no resolution but enforcement by authority.  This leads to resentment and division, and is a fuel of the "holy wars" that exist and persist in programming and technology circles.
 
 So if we shouldn't be opinionated, what alternative is there?
 
@@ -28,7 +28,7 @@ So if we shouldn't be opinionated, what alternative is there?
 
 ![[The School of Athens](https://en.wikipedia.org/wiki/The_School_of_Athens) by Raphael, depicting famous classical Greek philosophers](/img/coding-styles/bunch-of-greeks.jpg)
 
-Over two thousand years ago, the ancient Greeks were already studing logic and reason, denouncing opinion, and seeking objective truth.
+Over two thousand years ago, the ancient Greeks were already studying logic and reason, denouncing opinion, and seeking objective truth.
 
 And humanity didn't stop with conjecture and rhetoric; in the millennia since, we've developed our collective knowledge of investigation, science, and research; and we today have the tools available to us to find truths, to understand the world around us, to find objectively better ways of doing things - and to find these things beyond reasonable argument.
 

@@ -1,6 +1,6 @@
 ## Procedural planets in Godot 3
 
-(Note: The project was created in the time of Godot 3, but this writeup was written in a Godot 4 era, so Godot-specific terminology may be inconsistent between the versions)
+(Note: The project was created in the time of Godot 3, but this write-up was written in a Godot 4 era, so Godot-specific terminology may be inconsistent between the versions)
 
 ![An example low-poly procedural planet shown in the Godot editor](/img/godot-planets/planet.png)
 
@@ -45,9 +45,9 @@ The most striking flaw in this arrangement was in the edges between chunk sizes.
 
 One could try to solve this with "border" chunks, where a chunk mesh can be a combination of a higher-LOD edges and lower-LOD edges, depending on its visible neighbour chunks.  However, that sounded complicated, so I chose to solve it in a far simpler manner - flanges.
 
-I chose to add tall vertical faces to the outside edge of every chunk, so that they formed a skirt around the perimiter, turning each chunk effectively into a tall column that stretched deep into the planet.
+I chose to add tall vertical faces to the outside edge of every chunk, so that they formed a skirt around the perimeter, turning each chunk effectively into a tall column that stretched deep into the planet.
 
-To prevent these visible flanges looking like sheer cliffs, each surface face on the perimiter of a chunk had its own vertical section (two triangles) of the flange, which adopted the same normal as the surface face itself.  This meant that, for shading purposes, the flange would be rendered with the same lighting as the surface faces.
+To prevent these visible flanges looking like sheer cliffs, each surface face on the perimeter of a chunk had its own vertical section (two triangles) of the flange, which adopted the same normal as the surface face itself.  This meant that, for shading purposes, the flange would be rendered with the same lighting as the surface faces.
 
 ![Flanges on an icosphere chunk](/img/godot-planets/flanges.png)
 
@@ -95,7 +95,7 @@ A second issue with 32-bit accuracy at solar-system-scale environments is that i
 
 A common solution to this problem is to use a floating origin (aka origin shifting), to keep the player/camera relatively close to `(0, 0)`.  The name suggests that the origin of a scene is moved to a new position, but the technical reality is instead that everything in the game environment is teleported instantaneously to new coordinates at certain times.
 
-For this project, I positioned the origin at the centre of the local planetary body when the player was close by, or else an abstract `Space` object, which provided a local coordinate system centered around where the player was when they left the previous point of reference.
+For this project, I positioned the origin at the centre of the local planetary body when the player was close by, or else an abstract `Space` object, which provided a local coordinate system centred around where the player was when they left the previous point of reference.
 
 It should be noted that, using the planet centre as the origin is only really suitable for small planets (the one in this project is 1/1000 Earth scale), and because there are no small-scale objects to render.  For larger worlds, floating the origin based on transitions from chunk to chunk may be more appropriate.
 

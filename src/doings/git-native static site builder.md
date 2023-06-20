@@ -58,7 +58,7 @@ Any file whose name starts with `DRAFT_` will be built, but not automatically ad
 
 #### Error pages
 
-For compatibility with eg. GitHub Pages, source files whose name without extention is three digits (`[0-9]{3}`) will be treated specially.  The index of such pages will not be placed in the page's subdirectory, but will mirror the location and name of the source file itself.
+For compatibility with eg. GitHub Pages, source files whose name without extension is three digits (`[0-9]{3}`) will be treated specially.  The index of such pages will not be placed in the page's subdirectory, but will mirror the location and name of the source file itself.
 
 Eg. the file `src/404.md` will result in `404.html` being built in the site root.  However, it will still have and link to a `404/history.html` file.
 
