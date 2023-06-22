@@ -25,10 +25,7 @@
 }
 
 html {
-	position: relative;
 	max-width: 65ch;
-	min-height: 100vh;
-	min-height: -webkit-fill-available;
 	margin: 0 auto;
 }
 
@@ -37,11 +34,17 @@ body {
 	padding: 0;
 	color: var(--content-color);
 	background-color: var(--bg-color);
-	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	min-height: 100vh;
+	gap: 1rem;
+}
+body > main {
+	flex: 1;
 }
 
 header {
-	margin-bottom: 1rem;
 	padding: 1rem;
 	color: var(--secondary-color);
 	background-color: var(--secondary-bg-color);
@@ -58,7 +61,6 @@ nav {
 	display: flex;
 	justify-content: flex-start;
 	flex-wrap: wrap;
-	margin-bottom: 1rem;
 	padding: 0 1rem;
 	gap: 1rem;
 	color: var(--secondary-color);
@@ -85,7 +87,6 @@ nav a:focus-visible {
 	justify-content: flex-end;
 	gap: 1rem;
 	max-width: 65ch;
-	margin-bottom: 1rem;
 	padding: 0 1rem;
 }
 #page-history a {
@@ -99,7 +100,7 @@ nav a:focus-visible {
 
 
 main {
-	padding: 0 1rem 3rem;
+	padding: 0 1rem;
 	line-height: 140%;
 }
 
@@ -138,8 +139,6 @@ main {
 
 
 footer {
-	position: absolute;
-	bottom: 0;
 	display: flex;
 	justify-content: flex-end;
 	width: 100%;
