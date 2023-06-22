@@ -24,7 +24,7 @@
 		</span>
 		<span class="item updated">
 			<span class="event">Updated</span>
-			<time class="time">2023-06-14</time>
+			<time class="time">2023-06-20</time>
 		</span>
 	</section>
 
@@ -32,7 +32,7 @@
 <h2 id="procedural-planets-in-godot-3">Procedural planets in Godot
 3</h2>
 <p>(Note: The project was created in the time of Godot 3, but this
-writeup was written in a Godot 4 era, so Godot-specific terminology may
+write-up was written in a Godot 4 era, so Godot-specific terminology may
 be inconsistent between the versions)</p>
 <figure>
 <img src="/img/godot-planets/planet.png"
@@ -132,11 +132,11 @@ depending on its visible neighbour chunks. However, that sounded
 complicated, so I chose to solve it in a far simpler manner -
 flanges.</p>
 <p>I chose to add tall vertical faces to the outside edge of every
-chunk, so that they formed a skirt around the perimiter, turning each
+chunk, so that they formed a skirt around the perimeter, turning each
 chunk effectively into a tall column that stretched deep into the
 planet.</p>
 <p>To prevent these visible flanges looking like sheer cliffs, each
-surface face on the perimiter of a chunk had its own vertical section
+surface face on the perimeter of a chunk had its own vertical section
 (two triangles) of the flange, which adopted the same normal as the
 surface face itself. This meant that, for shading purposes, the flange
 would be rendered with the same lighting as the surface faces.</p>
@@ -229,8 +229,8 @@ coordinates at certain times.</p>
 <p>For this project, I positioned the origin at the centre of the local
 planetary body when the player was close by, or else an abstract
 <code>Space</code> object, which provided a local coordinate system
-centered around where the player was when they left the previous point
-of reference.</p>
+centred around where the player was when they left the previous point of
+reference.</p>
 <p>It should be noted that, using the planet centre as the origin is
 only really suitable for small planets (the one in this project is
 1/1000 Earth scale), and because there are no small-scale objects to
