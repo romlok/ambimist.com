@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Don't indent Clojure code | Deep sigh and carry on</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+	<header>
+		<h1><a href="/">Deep sigh and carry on</a></h1>
+	</header>
+
+	<nav aria-labelledby="primary">
+<a href="/doings">Doings</a>
+<a href="/thoughts">Thoughts</a>
+	</nav>
+
+	<section id="page-history">
+		<a href="history.html">History</a>
+		<span class="item created">
+			<span class="event">Created</span>
+			<time class="time">2023-06-17</time>
+		</span>
+		<span class="item updated">
+			<span class="event">Updated</span>
+			<time class="time">2023-06-23</time>
+		</span>
+	</section>
+
+	<main>
+<h2 id="dont-indent-clojure-code">Don't indent Clojure code</h2>
+<p>I first came to the <a href="https://clojure.org/">Clojure
+programming language</a> from a most recent background heavy in Python
+and Python-like languages. As such, I was (and still am) a strong
+advocate of indentation of blocks to denote scope and context of code,
+and particularly of so-called "hard" tabs as a token representing "one
+indentation level".</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_function(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>        some_parameter,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        another_parameter,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        optional_parameter <span class="op">=</span> <span class="st">&quot;There&#39;s a horse walking past as I write this&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        ):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">        It&#39;s my function, I&#39;ll do what I like!</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    do_stuff(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        foo <span class="op">=</span> some_parameter,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        bar <span class="op">=</span> {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            baz: another_parameter,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>            fez: optional_parameter,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        )</span></code></pre></div>
+<p>Thus it grated on me when I first approached Clojure, with its
+explicit and exclusive use of spaces for indentation, and the frequently
+inconsistent width and rules for such. That was, until I had a
+realisation:</p>
+<p><em>Clojure doesn't have indentation, it only has alignment and
+non-alignment.</em></p>
+<p>While many confuse or conflate the terms indentation and alignment
+when used in the context of source code, including in the <a
+href="https://guide.clojure.style/">Clojure community style guide</a>,
+there is a clear difference between the semantics of the terms.</p>
+<p>Indentation as a term describes code's <em>position</em> relative to
+its <em>container</em>, whereas alignment describes instead how code
+<em>relates</em> to its <em>siblings</em>.</p>
+<p>The term indentation is indeed used by the Clojure style guide and
+other such places to refer to positioning code in relation to eg. form
+opening syntax. However, I argue that this idea of indentation is
+irrelevant to Clojure, and that solely thinking in terms of alignment
+leads to clearer thinking, and clearer code.</p>
+<h3 id="alignment">Alignment</h3>
+<p>As described by the <a
+href="https://en.wikipedia.org/wiki/Gestalt_psychology">Gestalt
+principles</a>, human beings tend to group individual items in terms of
+their proximity to each other, and treat them as a single cognitive
+unit. This is also true when individual items are laid out as a
+continuous path.</p>
+<p>Thus, when we lay out code we should be mindful that when we align
+two terms, our brains will instinctively group those tokens into a
+single semantic collection. This can reduce the cognitive load necessary
+to understand the code, but conversely can <em>increase</em> the
+cognitive load if one needs to override those instincts should the terms
+<em>not</em> be semantically equivalent.</p>
+<p>The Clojure style guide references this tendency when <a
+href="https://guide.clojure.style/#vertically-align-fn-args">discussing
+function arguments</a>:</p>
+<blockquote>
+<p>Vertically align function (macro) arguments spanning multiple
+lines.</p>
+</blockquote>
+<blockquote>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; good</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">filter</span> <span class="kw">even?</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">range</span> <span class="dv">1</span> <span class="dv">10</span>))</span></code></pre></div>
+</blockquote>
+<blockquote>
+<p>The reasoning behind this guideline is pretty simple - the arguments
+are easier to process by the human brain if they stand out and stick
+together.</p>
+</blockquote>
+<p>However, the very next section instructs that, should one not have
+enough horizontal space to align the arguments so, one should
+instead:</p>
+<blockquote>
+<p>Use a single space indentation for function (macro) arguments when
+there are no arguments on the same line as the function name.</p>
+</blockquote>
+<blockquote>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; good</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">filter</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="kw">even?</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> (<span class="kw">range</span> <span class="dv">1</span> <span class="dv">10</span>))</span></code></pre></div>
+</blockquote>
+<p>While <em>technically</em> the arguments are still aligned, by
+aligning them also with the function name itself, we are conflating
+their purpose even as their semantics are clearly different. The guide
+even admits that this makes them essentially indistinguishable from a
+"regular list literal", which is correct syntactically, but semantically
+unhelpful.</p>
+<h3 id="no-body">No body</h3>
+<p>The purpose of falling back to "use a single space indentation", aka
+aligning arguments with the function name, appears to be to distinguish
+regular arguments from the "body" of a function (macro) call.</p>
+<p>However, there doesn't appear to be any clear definition of what
+counts as "body". The style guide provides these as examples of "good"
+code:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">when</span> something</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (something-else))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">with-out-str</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">println</span> <span class="st">&quot;Hello, &quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">println</span> <span class="st">&quot;world!&quot;</span>))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">or</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a> ala</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a> bala</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a> portokala)</span></code></pre></div>
+<p>All of these are macros, all of them take an arbitrary number of
+extra arguments, so why is <code>or</code> not considered to have a
+body?</p>
+<p>Certainly, <code>when</code> and <code>with-out-str</code> are
+defined with parameters named specifically <code>body</code>, but then
+what of <code>cond</code> or <code>as-&gt;</code> which are also named
+in the document as to be indented as they have a body? The parameter in
+question for those is named <code>clauses</code> and <code>forms</code>,
+respectively, so maybe we can check for those too? Any more? Almost
+certainly.</p>
+<p>Perhaps we can instead promote <code>or</code> to be considered
+having a body, and make the defining characteristic of a "bodied"
+function/macro that they take an arbitrary number of parameters?</p>
+<pre><code>user=&gt; (doc def)
+-------------------------
+def
+  (def symbol doc-string? init?)
+...</code></pre>
+<p>Crap.</p>
+<h3 id="non-alignment">Non-alignment</h3>
+<p>So rather than try to develop a convoluted system of rules, or a
+necessarily incomplete list of special case functions and macros, I
+propose three simple rules:</p>
+<ol type="1">
+<li>Align semantically equivalent things</li>
+<li><strong>Do not align</strong> semantically dissimilar things</li>
+<li>Don't talk about "indentation"</li>
+</ol>
+<p>These rules intentionally do not specify distances or directions. Nor
+do they specify language structures or features. Their purpose is only
+to emphasise that it is the semantic arrangement of the code which aids
+understanding, not the implementation details or exact distances from
+here nor there.</p>
+<p>So by these rules, all of the following could be considered equally
+valid:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">or</span> ala</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    bala</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    portokala)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">or</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  ala</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  bala</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  portokala)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>(<span class="kw">when</span> something</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  (something-else))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>(<span class="kw">when</span> something</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    (something-else))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>(<span class="kw">with-out-str</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">println</span> <span class="st">&quot;Hello, &quot;</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">println</span> <span class="st">&quot;world!&quot;</span>))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>(<span class="kw">with-out-str</span> (<span class="kw">println</span> <span class="st">&quot;Hello, &quot;</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>              (<span class="kw">println</span> <span class="st">&quot;world!&quot;</span>))</span></code></pre></div>
+<p>You may balk at some of these, I know I did. But when you do
+instinctively recoil in revulsion, ask yourself if the unusual alignment
+objectively hampers understanding the code? If so, then perhaps we can
+analyse that to discover an exception or a greater rule. Though in any
+case, I don't expect it would have anything to do with
+"indentation"!</p>
+<h4 id="not-only-but-also">Not only, but also</h4>
+<p>Other existing guidelines naturally flow from these rules, such as
+those for aligning <a
+href="https://guide.clojure.style/#bindings-alignment">bindings</a>, <a
+href="https://guide.clojure.style/#map-keys-alignment">map keys</a>, or
+literal collections:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; list literal</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">;; vector literal</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span>]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">;; set literal</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>#{<span class="dv">1</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>}</span></code></pre></div>
+<p>Further, by following only such rules of semantic alignment, we can
+gain additional benefits when laying out our data, eg:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; A map of data where related values are aligned, but unrelated are not</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>{<span class="at">:id</span> <span class="dv">123</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="at">:title</span> <span class="st">&quot;Foobar&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a> <span class="at">:width</span>    <span class="dv">1</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a> <span class="at">:height</span> <span class="dv">234</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a> <span class="at">:depth</span>   <span class="dv">56</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a> <span class="at">:my.project.author/name</span>  <span class="st">&quot;Foo Barbaz&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a> <span class="at">:my.project.author/email</span> <span class="st">&quot;foo@bar.baz&quot;</span>}</span></code></pre></div>
+<p><a href="https://github.com/weavejester/hiccup">Hiccup</a> too, with
+its structural similarity to function/macro calls, can benefit from
+semantic non-alignment:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode clj"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; Using non-alignment of the keyword, props, and children</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; allows us to see the document structure intuitively:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>[<span class="at">:div</span> {<span class="at">:style</span> <span class="st">&quot;color: red&quot;</span>}</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  [<span class="at">:marquee</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    [<span class="at">:font</span> {<span class="at">:color</span> <span class="st">&quot;hotpink&quot;</span>}</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Hello&quot;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    [<span class="at">:blink</span> <span class="st">&quot;World!&quot;</span>]]]]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">;; In comparison to a strict indentation equivalent</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">;; which visually commingles props and children:</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>[<span class="at">:div</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a> {<span class="at">:style</span> <span class="st">&quot;color: red&quot;</span>}</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a> [<span class="at">:marquee</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  [<span class="at">:font</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>   {<span class="at">:color</span> <span class="st">&quot;hotpink&quot;</span>}</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;Hello&quot;</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  [<span class="at">:blink</span> <span class="st">&quot;World!&quot;</span>]]]]</span></code></pre></div>
+<h3 id="conclusion">Conclusion</h3>
+<p>So, if you're developing with Clojure (or perhaps more generally with
+any LISP dialect, I couldn't say), I ask that you consider eschewing the
+very concept of indentation! Push it from your mind, ban it from your
+code linter, and remove it from your documentation spell-checker!</p>
+<p>Embrace instead aligning - and non-aligning - your code along
+semantic lines. It may not always be as simple, but, when you come to
+revisit the code in 10 years' time, I believe your tired brain will
+thank your past self for making the effort to enshrine the code's
+semantics in the structure itself.</p>
+	</main>
+
+	<footer>
+<a rel="me" href="https://toot.io/@ambimist">
+	<img alt="Mastodon" src="/img/mastodon-black.svg" />
+</a>
+	</footer>
+</body>
+</html>
