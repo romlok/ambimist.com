@@ -401,15 +401,17 @@ build_file() (
 build_dir_index_items() (
 	source_path="$1"
 
-	dir_indexable_files "$source_path" | while read -r source_file; do
-		output_path="$(page_path "$source_file")"
-		url="$(site_rel_path "$output_path")"
-		title="$(basename "$output_path" | capitalise)"
+	dir_indexable_files "$source_path" \
+		| sort --ignore-case \
+		| while read -r source_file; do
+			output_path="$(page_path "$source_file")"
+			url="$(site_rel_path "$output_path")"
+			title="$(basename "$output_path" | capitalise)"
 
-		cat "$INDEX_ITEM_TEMPLATE" \
-			| sed -e "s|<URL>|$url|g" \
-				-e "s|<TITLE>|$title|g"
-	done
+			cat "$INDEX_ITEM_TEMPLATE" \
+				| sed -e "s|<URL>|$url|g" \
+					-e "s|<TITLE>|$title|g"
+		done
 )
 
 build_dir_index() (
