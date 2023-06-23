@@ -16,6 +16,7 @@ PAGE_TEMPLATE="$ENGINE_PATH/page.html"
 NAV_TEMPLATE="$ENGINE_PATH/nav-item.html"
 CSS_ITEM_TEMPLATE="$ENGINE_PATH/stylesheet.html"
 
+REDIRECT_TEMPLATE="$ENGINE_PATH/redirect.html"
 INDEX_TEMPLATE="$ENGINE_PATH/index-content.html"
 INDEX_ITEM_TEMPLATE="$ENGINE_PATH/index-item.html"
 HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
@@ -277,6 +278,44 @@ sub_page_vars() (
 )
 
 
+page_old_paths() {
+	# Paths to where the page used to be
+	source_file="$1"
+
+	current_path="$(page_path "$source_file")"
+
+	git log --follow --find-renames=20% --format="" --name-only -- "$source_file" \
+		| while read -r old_file; do
+			old_path="$(page_path "$(readlink -m "$old_file")")"
+			[ "$current_path" = "$old_path" ] && continue
+			echo "$old_path"
+		done \
+		| sort | uniq
+}
+
+build_redirects() {
+	# Creates HTML redirection replacements for when page URLs change
+	source_file="$1"
+
+	old_paths="$(page_old_paths "$source_file")"
+	[ -z "$old_paths" ] && return
+
+	echo "#### Redirect pages"
+
+	current_url="$(site_rel_path "$(page_path "$source_file")")"
+	echo "$old_paths" \
+		| while read -r old_path; do
+			mkdir -p "$old_path"
+			output_file="$old_path/index.html"
+			[ -f "$output_file" ] && continue
+
+			cat "$REDIRECT_TEMPLATE" \
+				| sed -e "s|<PAGE-URL>|$current_url|g" \
+				> "$output_file"
+		done
+}
+
+
 build_history_items() (
 	source_path="$1"
 
@@ -394,6 +433,7 @@ build_file() (
 			> "$output_index"
 
 		build_history "$input_file"
+		build_redirects "$input_file"
 	fi
 )
 
@@ -401,15 +441,17 @@ build_file() (
 build_dir_index_items() (
 	source_path="$1"
 
-	dir_indexable_files "$source_path" | while read -r source_file; do
-		output_path="$(page_path "$source_file")"
-		url="$(site_rel_path "$output_path")"
-		title="$(basename "$output_path" | capitalise)"
+	dir_indexable_files "$source_path" \
+		| sort --ignore-case \
+		| while read -r source_file; do
+			output_path="$(page_path "$source_file")"
+			url="$(site_rel_path "$output_path")"
+			title="$(basename "$output_path" | capitalise)"
 
-		cat "$INDEX_ITEM_TEMPLATE" \
-			| sed -e "s|<URL>|$url|g" \
-				-e "s|<TITLE>|$title|g"
-	done
+			cat "$INDEX_ITEM_TEMPLATE" \
+				| sed -e "s|<URL>|$url|g" \
+					-e "s|<TITLE>|$title|g"
+		done
 )
 
 build_dir_index() (
