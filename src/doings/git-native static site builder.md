@@ -62,11 +62,9 @@ For compatibility with eg. GitHub Pages, source files whose name without extensi
 
 Eg. the file `src/404.md` will result in `404.html` being built in the site root.  However, it will still have and link to a `404/history.html` file.
 
-#### Customising the design
+#### Redirects
 
-The generated HTML code is static, and mostly pre-defined by the engine.  Customisation of the site design, therefore, is done through CSS.  This is achieved by creating `.css` files in a `css` directory in the repository root.  Any files in this directory will automatically be `link`ed in the HTML `head` of every page.
-
-The page footer can be customised by providing a `src/footer.html`, the content of which will be inserted into the `<footer>` element of every page.
+If pages are found in the commit log to have been renamed at all, then for each previous name, additional pages are created with an HTML meta redirect to the new URL.
 
 #### Navigation
 
@@ -77,3 +75,9 @@ The exceptions are:
 1. Directories which are empty or contain only drafts.
 2. Numeric error pages, as described above.
 3. The file `src/footer.html`, as described above.
+
+#### Customising the design
+
+The generated HTML code is static, and mostly pre-defined by the engine.  Customisation of the site design, therefore, is done through CSS.  This is achieved by creating `.css` files in a `css` directory in the repository root.  Any files in this directory will automatically be `link`ed in the HTML `head` of every page.
+
+The page footer can be customised by providing a `src/footer.html`, the content of which will be inserted into the `<footer>` element of every page.
