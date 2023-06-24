@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Coding styles are like assholes | Deep sigh and carry on</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+	<header>
+		<h1><a href="/">Deep sigh and carry on</a></h1>
+	</header>
+
+	<nav aria-labelledby="primary">
+<a href="/doings">Doings</a>
+<a href="/thoughts">Thoughts</a>
+	</nav>
+
+	<section id="page-history">
+		<a href="history.html">History</a>
+		<span class="item created">
+			<span class="event">Created</span>
+			<time class="time">2023-01-22</time>
+		</span>
+		<span class="item updated">
+			<span class="event">Updated</span>
+			<time class="time">2023-06-24</time>
+		</span>
+	</section>
+
+	<main>
+<p>The following is adapted and expanded from a talk I gave in November
+2022 at an internal developers conference for the company I worked for.
+I'd been thinking a lot about coding styles, and had had an insight that
+I wanted to share.</p>
+<h2 id="coding-styles-are-like-assholes">Coding styles are like
+assholes</h2>
+<p>You may be familiar with the idiom:</p>
+<blockquote>
+<p>Opinions are like assholes; everyone has one, and they all stink</p>
+</blockquote>
+<p>And I claim this also of coding styles. Why? Because they claim it
+about themselves:</p>
+<figure>
+<img src="/img/coding-styles/opinionated-github-slide.png"
+alt="A selection of GitHub projects describing themselves as &quot;opinionated&quot;" />
+<figcaption aria-hidden="true">A selection of GitHub projects describing
+themselves as "opinionated"</figcaption>
+</figure>
+<p>The above is a selection of code formatting and style projects on
+GitHub when you search for "opinionated". These are <em>only</em>
+projects relating to code style and formatting, and <em>only</em> ones
+on GitHub. There are many other opinionated projects out there, believe
+me!</p>
+<p>I have seen that not only these projects, but the wider software
+community, seem to use the word "opinionated" as a badge of honour. As
+if it is a good and virtuous thing to be opinionated. One of these
+projects even gave themselves a <em>trophy</em> for being
+opinionated!</p>
+<figure>
+<img src="/img/coding-styles/opinionated-github-trophy.png"
+alt="A Go styleguide gives itself a trophy" />
+<figcaption aria-hidden="true">A Go styleguide gives itself a
+trophy</figcaption>
+</figure>
+<p>But if we think about the word, what does it mean to be opinionated?
+It means to be biased, dogmatic, and arbitrary. In fact, if you look up
+"opinionated" in a thesaurus, you will find a whole heap of words which
+you probably don't want to see associated with your project or its
+leadership!</p>
+<p>Opinions are divisive, precisely because they are personal and
+arbitrary. And when arbitrary opinions differ, there can be no
+resolution but enforcement by authority. This leads to resentment and
+division, and is a fuel of the "holy wars" that exist and persist in
+programming and technology circles.</p>
+<p>So if we shouldn't be opinionated, what alternative is there?</p>
+<h3 id="ancient-greece">Ancient Greece</h3>
+<figure>
+<img src="/img/coding-styles/bunch-of-greeks.jpg"
+alt="The School of Athens by Raphael, depicting famous classical Greek philosophers" />
+<figcaption aria-hidden="true"><a
+href="https://en.wikipedia.org/wiki/The_School_of_Athens">The School of
+Athens</a> by Raphael, depicting famous classical Greek
+philosophers</figcaption>
+</figure>
+<p>Over two thousand years ago, the ancient Greeks were already studying
+logic and reason, denouncing opinion, and seeking objective truth.</p>
+<p>And humanity didn't stop with conjecture and rhetoric; in the
+millennia since, we've developed our collective knowledge of
+investigation, science, and research; and we today have the tools
+available to us to find truths, to understand the world around us, to
+find objectively better ways of doing things - and to find these things
+beyond reasonable argument.</p>
+<p>We who write software like to call ourselves "Engineers", and the
+basis of what we do is indeed logic and reason - that's how computers
+work! But a lot of what we do is still based on instinct, on gut
+feelings, on opinions.</p>
+<h3 id="rust">Rust</h3>
+<figure>
+<img src="/img/coding-styles/rust-style-team.png"
+alt="Rust Style Team assemble!, Sept 2022" />
+<figcaption aria-hidden="true"><a
+href="https://blog.rust-lang.org/inside-rust/2022/09/29/announcing-the-rust-style-team.html">Rust
+Style Team assemble!</a>, Sept 2022</figcaption>
+</figure>
+<p>In the early years of the Rust programming language, the Rust Style
+Team was created to discuss and decide upon a consistent set of style
+guides for people writing in Rust. Once the style guide was completed,
+and the team's job done, the group was disbanded.</p>
+<p>In the intervening years, the Rust language didn't sit still, with
+new features being added, and knowledge and practices being advanced. So
+the <a
+href="https://blog.rust-lang.org/inside-rust/2022/09/29/announcing-the-rust-style-team.html">Rust
+Style Team was re-formed</a> to update the existing Rust coding style
+with guidance on how to use new features of the language.</p>
+<p>Since I was already thinking about this subject, I took a look at the
+announcement. What I found, buried in their <a
+href="https://rust-lang.github.io/rfcs/3309-style-team.html">RFC-3309</a>,
+was this small ray of light:</p>
+<figure>
+<img src="/img/coding-styles/rust-style-rfc.png"
+alt="Snippet of Rust RFC-3309" />
+<figcaption aria-hidden="true">Snippet of <a
+href="https://rust-lang.github.io/rfcs/3309-style-team.html">Rust
+RFC-3309</a></figcaption>
+</figure>
+<p>Among the sources that the Rust Style Team announced would be used to
+inform their decision was research - into language transferability. This
+is great.</p>
+<p>It's a great start, at least. Because I believe that there is a great
+deal more research that such a style team should be consulting!</p>
+<h3 id="what-is-source-code">What is source code?</h3>
+<p>As a software developer, what is source code to us?</p>
+<ul>
+<li><p>It is how we understand the precise function of an
+application.</p></li>
+<li><p>It is how we interact with the inner workings of
+software.</p></li>
+<li><p>It is <strong><em>our primary user interface</em></strong> to the
+project we're working on!</p></li>
+</ul>
+<p>We as a society have centuries of research and investigation into how
+people perceive the world around us, our common biological quirks, the
+cognitive biases and shortcuts that our brains share, how we understand
+written words and symbols, and how we interact with our environment and
+the tools we make.</p>
+<p>We don't have to rely on our feelings of the right way to do things,
+when we have data available to that allows us to make reasoned
+decisions.</p>
+<h3 id="odd-one-out">Odd one out</h3>
+<p>One of the cognitive shortcuts our brains provide is near
+instantaneous and effortless recognition and classification of objects
+based on certain characteristics, such as their shape. To demonstrate
+this, we can play some simple games of spotting the odd one out:</p>
+<figure>
+<img src="/img/coding-styles/sushi.jpg"
+alt="One of these sushi is not like the others" />
+<figcaption aria-hidden="true">One of these sushi is not like the
+others</figcaption>
+</figure>
+<p>Here we have three pictures of sushi in different environments. Just
+by looking at their shape, their construction, we can recognise that the
+sushi in the middle is different from the other two. We don't have to
+know the ingredients, the taste, the texture, or even the names.</p>
+<figure>
+<img src="/img/coding-styles/potato-ui.png"
+alt="One of these UI elements is not like the others" />
+<figcaption aria-hidden="true">One of these UI elements is not like the
+others</figcaption>
+</figure>
+<p>If you've been familiar with computers for any length of time, you
+will probably recognise the left two items as buttons. We don't have to
+know what it says on the button, or even what language it is written in,
+to understand that these are things which we as the user can interact
+with to perform an action.</p>
+<figure>
+<img src="/img/coding-styles/reframe-code.png"
+alt="One of these code blocks is not like the others" />
+<figcaption aria-hidden="true">One of these code blocks is not like the
+others</figcaption>
+</figure>
+<p>Here we have some Clojure(Script) source code - blurred so we focus
+only on the shape. One might expect that the bottom code snippet is the
+odd one out here. This is obviously a trick question, however.</p>
+<p>The odd one out is actually the first code block, yet we can't tell
+that from its shape. When reading this code, to understand the nature of
+each block, to understand what kind of concept the code represents, we
+have to stop, read, and parse at least the first line of each block.</p>
+<p>For reference, this is code written according to the <a
+href="https://github.com/day8/re-frame">Re-Frame framework</a>. The
+first block represents what is known as a subscription, while the bottom
+two represent event handlers.</p>
+<p>The reason I chose this particular example is because the middle and
+bottom code blocks, which are visually distinct from each other, in fact
+provide <em>the exact same</em> functionality! The middle block makes
+use of a convenience function intended to reduce the need for
+boilerplate, but in doing so it directs the visual shape of the
+resultant code toward being indistinguishable from a something which is
+conceptually very different!</p>
+<h3 id="source-code-is-a-ui">Source code is a UI</h3>
+<p>I hope it is now clear that source code is itself a user interface,
+with which developers interact daily, and that how we design and arrange
+the code can have a strong effect on how quickly and instinctively we
+can understand it.</p>
+<p>It may be rather unreasonable to ask all software developers to also
+be UI experts (though I wouldn't object if this were the case!).
+However, if you're involved in writing a coding style guide - whether
+for a programming language, a library, or a whole application - I think
+it would be a great benefit to have at least a basic grounding in the
+principles of user interface design.</p>
+<p>But whatever you're doing, whether you're writing code or not,
+writing style guides or not, all I really ask is that you be
+<em>reasonable</em>!</p>
+	</main>
+
+	<footer>
+<a rel="me" href="https://toot.io/@ambimist">
+	<img alt="Mastodon" src="/img/mastodon-black.svg" />
+</a>
+	</footer>
+</body>
+</html>
