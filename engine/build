@@ -194,13 +194,6 @@ done
 
 echo "## Generating pages"
 
-site_path() {
-	source_path="$1"
-
-	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
-	readlink -m "$SITE_PATH/$rel_path"
-}
-
 page_path() {
 	source_file="$1"
 
@@ -457,9 +450,8 @@ build_dir_index_items() (
 build_dir_index() (
 	source_path="$1"
 
-	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
-	dir_name="$(basename "$rel_path" | capitalise)"
-	output_path="$(site_path "$source_path")"
+	dir_name="$(page_name "$source_path" | capitalise)"
+	output_path="$(page_path "$source_path")"
 
 	rel_output_path="$(site_rel_path "$output_path")"
 	echo "### $rel_output_path/index"
