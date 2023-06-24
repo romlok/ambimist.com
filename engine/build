@@ -28,9 +28,31 @@ DRAFT_PREFIX="DRAFT_"
 
 FOOTER_FILE="$SRC_PATH/footer.html"
 
+urlify() {
+	# Convert a value to URL-safe(r) form
+	echo "$1" \
+		| tr -d '!"%^&*()+=[]{}:;@#|\\<>,.?\r\n'\' \
+		| tr -s "[:space:]" "-" \
+		| tr "[:upper:]" "[:lower:]"
+}
+
 page_name() {
 	basename "$1" | cut -d. -f1 | sed -e "s/^$DRAFT_PREFIX//"
 }
+
+page_path() {
+	source_file="$1"
+
+	rel_path="$(dirname "$source_file" | sed -e "s|^$SRC_PATH/\?||")"
+
+	if ! is_index_name "$source_file"; then
+		name="$(page_name "$source_file")"
+		rel_path="$rel_path/$name"
+	fi
+
+	readlink -m "$SITE_PATH/$(urlify "$rel_path")"
+}
+
 
 section_name() {
 	echo "$1" \
@@ -122,7 +144,7 @@ ext_to_converter() {
 
 capitalise() {
 	read val
-	echo -n "$val" | head -c1 | tr [:lower:] [:upper:]
+	echo -n "$val" | head -c1 | tr "[:lower:]" "[:upper:]"
 	echo -n "$val" | tail -c+2
 }
 
@@ -165,12 +187,11 @@ build_pages_nav() {
 		is_empty_src_dir "$page_file" && continue
 
 		name="$(page_name "$page_file")"
-		url="/$name"
-		title="$(echo "$name" | capitalise)"
+		url="$(site_rel_path "$(page_path "$page_file")")"
 
 		cat "$NAV_TEMPLATE" \
 			| sed -e "s|<URL>|$url|g" \
-				-e "s|<TITLE>|$title|g"
+				-e "s|<TITLE>|$name|g"
 	done
 }
 
@@ -193,27 +214,6 @@ done
 #
 
 echo "## Generating pages"
-
-site_path() {
-	source_path="$1"
-
-	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
-	readlink -m "$SITE_PATH/$rel_path"
-}
-
-page_path() {
-	source_file="$1"
-
-	name="$(page_name "$source_file")"
-	rel_path="$(dirname "$source_file" | sed -e "s|^$SRC_PATH/\?||")"
-
-	if is_index_name "$source_file" ]; then
-		readlink -m "$SITE_PATH/$rel_path"
-	else
-		readlink -m "$SITE_PATH/$rel_path/$name"
-	fi
-}
-
 
 page_index_file() {
 	source_file="$1"
@@ -249,11 +249,11 @@ relative_url() {
 page_title() {
 	source_file="$1"
 
-	section_title="$(section_name "$source_file" | capitalise)"
+	section_title="$(section_name "$source_file")"
 
 	if ! is_index_name "$source_file"; then
 		# Regular file
-		echo "$(page_name "$source_file" | capitalise) | $SITE_NAME"
+		echo "$(page_name "$source_file") | $SITE_NAME"
 	elif [ -z "$section_title" ]; then
 		# Root index file
 		echo "$SITE_NAME"
@@ -316,10 +316,25 @@ build_redirects() {
 }
 
 
+dir_all_hashes() {
+	# Returns all commit hashes affecting a directory
+	# in no particular order
+	source_path="$1"
+
+	find "$source_path" -type f \
+		| while read -r source_file; do
+			git log --follow --find-renames=20% --format="%H" -- "$source_file"
+		done \
+		| sort | uniq
+}
+
 build_history_items() (
 	source_path="$1"
 
-	git log --follow --find-renames=20% --date=format-local:"%Y-%m-%d %H:%M:%SZ" --pretty=tformat:"%H%x09%h%x09%ad%x09%s" -- "$source_path" \
+	# Regular git log --follow doesn't follow renames for directories :(
+	interesting_hashes="$(dir_all_hashes "$source_path")"
+	git log --date=format-local:"%Y-%m-%d %H:%M:%SZ" --format="%H%x09%h%x09%ad%x09%s" \
+		| grep -e "$interesting_hashes" \
 		| while read -r line; do
 			longhash="$(echo "$line" | cut -f1)"
 			shorthash="$(echo "$line" | cut -f2)"
@@ -444,9 +459,9 @@ build_dir_index_items() (
 	dir_indexable_files "$source_path" \
 		| sort --ignore-case \
 		| while read -r source_file; do
+			title="$(page_name "$source_file")"
 			output_path="$(page_path "$source_file")"
 			url="$(site_rel_path "$output_path")"
-			title="$(basename "$output_path" | capitalise)"
 
 			cat "$INDEX_ITEM_TEMPLATE" \
 				| sed -e "s|<URL>|$url|g" \
@@ -457,9 +472,8 @@ build_dir_index_items() (
 build_dir_index() (
 	source_path="$1"
 
-	rel_path="$(echo "$source_path" | sed -e "s|^$SRC_PATH/\?||")"
-	dir_name="$(basename "$rel_path" | capitalise)"
-	output_path="$(site_path "$source_path")"
+	dir_name="$(page_name "$source_path")"
+	output_path="$(page_path "$source_path")"
 
 	rel_output_path="$(site_rel_path "$output_path")"
 	echo "### $rel_output_path/index"
