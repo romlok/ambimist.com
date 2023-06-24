@@ -316,10 +316,25 @@ build_redirects() {
 }
 
 
+dir_all_hashes() {
+	# Returns all commit hashes affecting a directory
+	# in no particular order
+	source_path="$1"
+
+	find "$source_path" -type f \
+		| while read -r source_file; do
+			git log --follow --find-renames=20% --format="%H" -- "$source_file"
+		done \
+		| sort | uniq
+}
+
 build_history_items() (
 	source_path="$1"
 
-	git log --follow --find-renames=20% --date=format-local:"%Y-%m-%d %H:%M:%SZ" --pretty=tformat:"%H%x09%h%x09%ad%x09%s" -- "$source_path" \
+	# Regular git log --follow doesn't follow renames for directories :(
+	interesting_hashes="$(dir_all_hashes "$source_path")"
+	git log --date=format-local:"%Y-%m-%d %H:%M:%SZ" --format="%H%x09%h%x09%ad%x09%s" \
+		| grep -e "$interesting_hashes" \
 		| while read -r line; do
 			longhash="$(echo "$line" | cut -f1)"
 			shorthash="$(echo "$line" | cut -f2)"
