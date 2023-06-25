@@ -2,7 +2,11 @@
 
 Watching streamers play [Escape from Tarkov](https://www.escapefromtarkov.com/) and seeing how much time they spent sorting and rearranging their inventory, when compared to time spent actually playing the game, it inspired me to wonder "what if sorting the inventory _was_ the game?  What if the raids were just played out automatically?"
 
-It seems like Resident Evil fans are all over inventory organisation, with games like [Save Room](https://store.steampowered.com/app/1955330/Save_Room__Organization_Puzzle/), and [random fan games with falling blocks](https://old.reddit.com/r/residentevil/comments/uxqjvg/resident_evil_4_tetris_edition_fangame_i_made/).  And then there is [Backpack Hero](https://thejaspel.itch.io/backpack-hero), which successfully combines inventory organisation with an auto-battler.  However, I could find no game which combined the challenge of arranging Tetris-like falling shapes with the metagame of an autobattler.
+It seems like Resident Evil fans are all over inventory organisation, with games like [Save Room](https://store.steampowered.com/app/1955330/Save_Room__Organization_Puzzle/), and [random fan games with falling blocks](https://old.reddit.com/r/residentevil/comments/uxqjvg/resident_evil_4_tetris_edition_fangame_i_made/).
+
+Then there is [Backpack Hero](https://thejaspel.itch.io/backpack-hero), which successfully implements inventory organisation as a core aspect of gameplay in a roguelite.
+
+However, I could find no game which combined the challenge of arranging Tetris-like falling shapes with the metagame of an autobattler.
 
 ### The story so far
 
