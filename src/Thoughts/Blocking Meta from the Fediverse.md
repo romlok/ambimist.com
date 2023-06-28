@@ -1,16 +1,22 @@
 ## Blocking Meta from the Fediverse
 
+Recently, reports have come out that Meta, owner of Facebook, Instagram, and WhatsApp, have plans for [a service which connects to other platforms using a federated protocol](https://www.platformer.news/p/meta-is-building-a-decentralized).  Seemingly focused on [ActivityPub](https://en.wikipedia.org/wiki/ActivityPub), a protocol which has been brought to the limelight by Mastodon.
+
 I'm personally ambivalent toward Meta joining the Fediverse, however I believe a large dollop of caution is well warranted.
 
 ### Those who forget history
 
-Imagine for a moment if Microsoft entered a nascent market for user interfaces to what I like to call a "world wide web".  Due to the size of their existing user base, Microsoft's implementation of the web standards quickly becomes the de-facto accepted interpretation, including all its bugs, quirks, and inconsistencies.  Microsoft then adds some new features, and websites start having to code specifically to Microsoft's client, forcing competing clients to have to play to Microsoft's tune or go out of business - or, eventually, both.  The subsequent Internet Explorer 6 era was not a great time for innovation - or security - on the web.
+Imagine for a moment if Microsoft entered a nascent market for user interfaces to what I like to call a "world wide web".  Due to the size of their existing user base, Microsoft's implementation of the web standards quickly becomes the de-facto accepted interpretation, including all its bugs, quirks, and inconsistencies.
+
+Microsoft then adds some enticing new features, and websites start coding specifically to Microsoft's client. This forces competing clients to have to play to Microsoft's tune or go out of business - or, eventually, both.
+
+Then, having captured the market and dominated the ecosystem, Microsoft loses interest.  After all, there's no return on making improvements to a product or service which has no competition.  Most grey-beard web devs can tell you that the subsequent Internet Explorer 6 era was not a great time for innovation - or security - on the web.
 
 Now imagine if Meta entered a nascent market for clients to display what one might call a "fediverse".  Due to the sheer size of Meta's existing user base, developers will do their best to interoperate with the quirks of Meta's implementation of the standard, no matter how quirky, making Meta's interpretation the de-facto correct interpretation...
 
 #### Are doomed to repeat it?
 
-Or look to the history of OpenID.
+Or look to the history of [OpenID](https://en.wikipedia.org/wiki/Openid).
 
 For a brief, golden, glorious time in the mid-2000s we had true federated logins.  I would post comments on random Wordpress blogs, and sign in to Stack Overflow, by providing the site only my own website's URL.  Anyone could set up their own ID provider, or proxy one through their own domain (as I did), and any website supporting OpenID logins would accept it.
 
@@ -28,8 +34,12 @@ When a large group of people arrives in a more sparsely populated region, the sh
 
 Thirty years on, will the Fediverse suffer its own [Eternal September](https://en.wikipedia.org/wiki/Eternal_September)?
 
-### Should Meta be blocked from joining your network?
+### So should Meta be blocked from joining a network?
 
 Were Meta to join the Fediverse, the sheer quantity of users, developers, and societal clout at their disposal would provide them an enormous amount of influence over the evolution of the network, and ActivityPub as a standard.
 
-Do you trust that Meta will be a good citizen of the network?  Does the network have procedures and systems in place to prevent one or a small number of powerful parties from dominating?
+Do you trust that Meta will be a good citizen of the network?  Does the network have procedures and systems in place to prevent one or a small number of powerful parties from dominating both the technological and societal evolution?
+
+I can't say I know one way or the other, but I remember OpenID.
+
+!["Remember OpenID" scrawled on a wall of Babylon 5](/img/remember-openid.jpeg)
