@@ -43,3 +43,5 @@ Do you trust that Meta will be a good citizen of the network?  Does the network 
 I can't say I know one way or the other, but I remember OpenID.
 
 !["Remember OpenID" scrawled on a wall of Babylon 5](/img/remember-openid.jpeg)
+
+See also: [Ploum writing about the fall of XMPP](https://ploum.net/2023-06-23-how-to-kill-decentralised-networks.html)
