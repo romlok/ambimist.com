@@ -1,40 +1,57 @@
 ## Inventory-tetris autobattler
 
+![Our hero finds a chest in the dungeon, but what dangers could lurk in the dark?](/img/bag-of-holding/wide.png)
+
 Watching streamers play [Escape from Tarkov](https://www.escapefromtarkov.com/) and seeing how much time they spent sorting and rearranging their inventory, when compared to time spent actually playing the game, it inspired me to wonder "what if sorting the inventory _was_ the game?  What if the raids were just played out automatically?"
 
 It seems like Resident Evil fans are all over inventory organisation, with games like [Save Room](https://store.steampowered.com/app/1955330/Save_Room__Organization_Puzzle/), and [random fan games with falling blocks](https://old.reddit.com/r/residentevil/comments/uxqjvg/resident_evil_4_tetris_edition_fangame_i_made/).
 
-Then there is [Backpack Hero](https://thejaspel.itch.io/backpack-hero), which successfully implements inventory organisation as a core aspect of gameplay in a roguelite.
-
 However, I could find no game which combined the challenge of arranging Tetris-like falling shapes with the metagame of an autobattler.
+
+Others later followed through on similar ideas, such as [Backpack Hero](https://thejaspel.itch.io/backpack-hero), which successfully implements inventory organisation as a core aspect of gameplay in a roguelite; and a game jam entry [Bag of Holding](https://thoof.itch.io/bag-of-holding), closer to my idea that it even has the same working title!
+
+Yet still no falling shapes.
+
 
 ### The story so far
 
-![](/img/bag-of-holding/inventory.gif)
+![Arranging falling items in an early prototype](/img/bag-of-holding/inventory.gif)
 
-I decided on a fantasy medieval setting, so that the autobattler part could be a well-understood dungeon crawl;  and on a low-poly 2D style, since it's simple and fast to make programmer art for!
+I decided on a fantasy medieval setting, so that the autobattler part could be a well-understood dungeon crawl;  and on a low-poly (low-vertex?) 2D style, since it's simple and fast to make programmer art for!
 
-The primary gameplay loop so far superficially resembles the Tetris arrangement, where the player has a game grid into which shapes fall (the bag), and a queue displaying the shape/s that are to be deposited in the game grid.
+The primary gameplay loop so far superficially resembles the Tetris arrangement, where the player has a game grid (the bag) into which shapes (items) fall, and a queue displaying the shape/s that are to be deposited in the game grid.
 
-Whereas in the case of Tetris the next shape/s are determined directly, at random or by some algorithm, the shapes to be delivered to the bag in this game are determined by the procession of the autobattler element.  This is still random at its root, but provides the potential for the player to influence the generation of shapes in an intuitive manner.
+Whereas in the case of Tetris the next shape/s are determined directly, at random or by some algorithm, the items to be delivered to the bag in this game are determined by the procession of the autobattler element.  This is still random at its root, but provides the potential for the player to influence the generation of items in an intuitive manner.
 
-In the current prototype, the game ends when the bag inevitably overflows.  The intent is for this to be a neutral or successful ending, since the bag overflowing indicates to the autobattling hero that there's no more space for loot and it's time to leave and go sell it.  Other endings are intended to be added, such as hero death or boss defeat.
+A further difference from classic Tetris gameplay is that the falling speed of the items is not determined simply by how much progress the player has made.  I wanted to include this aspect of challenge, but in a manner which could be ameliorated by the player's actions, and also tied to the autobattler.  Thus a "queue pressure" system is used, where the speed of the falling item depends on the number of looted items waiting to be dropped.  This punishes the player for dawdling about placing items, rather than punishing the player simply for playing well.
 
-<div style="position: relative; padding-top: 56.25%;"><iframe title="Inventory-tetris autobattler prototype" src="https://spectra.video/videos/embed/79282256-de3f-4c2b-908c-161441678931?warningTitle=0&amp;p2p=0" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups" style="position: absolute; inset: 0px;" width="100%" height="100%" frameborder="0"></iframe></div>
+#### Going on adventures
 
-For those wanting to try it out for themselves, I've made the prototype's executables available as [Bag of Holding on Itch](https://romlok.itch.io/bagofholding), though I've only been able to personally test the Linux binary, so YMMV.
+![Facing off against goblins](/img/bag-of-holding/dungeon.png)
+
+As it stands in the initial alpha release, each game session is called an "adventure", and each of these autobattled adventures has two possible endings - either the items in the bag overflow, in which case the hero notices and leaves the dungeon with their loot; or else the hero falls in combat with the denizens of the dungeon.
+
+Thus, the player must balance acquiring and organising loot with strategically arranging for the bag to overflow before it's too late!
+
+
+<div style="position: relative; padding-top: 56.25%;"><iframe title="Bag of Holding pre-alpha gameplay" src="https://spectra.video/videos/embed/6228d1ac-26d2-4b92-a85d-6545776c939f?warningTitle=0&amp;p2p=0" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups" style="position: absolute; inset: 0px;" width="100%" height="100%" frameborder="0"></iframe></div>
+
+For those wanting to try it out for themselves, I've made executables available as [Bag of Holding on Itch](https://romlok.itch.io/bagofholding), though I've only been able to personally test the Linux binary, so YMMV.
+
+
+#### Combat
+
+![RIP](/img/bag-of-holding/rip.png)
+
+Right now, combat is very simple and deterministic.  Both the hero and the enemies do a static amount of damage and have a static amount of health (though "Custom adventures" can modify these fixed values).
+
+I intend to keep combat simple, automatic, and likely deterministic, but the intention is for the player to be able to influence the hero to keep them alive, so affecting combat with actions such as switching weapons and drinking potions is the ultimate aim.
+
 
 ### To be implemented
 
-The project got shelved (again) after I got to this prototype stage, but I have developed not so much a plan as a set of ideas for making this into a more complete game.
+While the future of the project is still somewhat uncertain, I have developed not so much a plan as a set of ideas for making this into a more complete game.
 
-#### Time pressure
-
-![l00t!](/img/bag-of-holding/loot.gif)
-
-Tetris and the like become more challenging as one proceeds, by gradually increasing how quickly shapes fall.  I wanted to include this aspect of challenge, but to also tie it to the autobattler aspect - punishing players for dawdling, rather than merely for playing well.
-
-Thus, the plan is for the speed of items falling to be affected by the number of items waiting in the queue - beyond a certain point, the more pending items in the queue, the faster items fall in the bag, and the more the player needs to act quickly to prevent overflowing.
 
 #### Opening the bag
 
@@ -56,19 +73,13 @@ Thus, being able to physically lift items out of the bag, as a reversal of the d
 
 So the current plan is simply to use magic!  The player will highlight an item that has settled in the bag, prompting the hero to pull it out when they have a chance.  At that point the item will simply disappear from the bag, and items above it in the game grid will start falling again, and/or leave awkward spaces.  This adds the gameplay dimension that the player needs to consider possible future removal of items when organising the bag content!
 
-#### Combat
-
-![Godot vs Goblot, the eternal conflict](/img/bag-of-holding/fight.gif)
-
-Right now, combat in the prototype is just a time sink.  The hero is currently invulnerable, and the two types of enemy are destined to die in a predetermined number of hits.  However, the primary challenge of the game is intended to be that of influencing the hero to keep them alive, so we want there to be risk to the combat.
-
-Since the basic combat is and will be automatic, the player's primary interaction will be through item use.  This will mean things like switching weapons, drinking potions, or even offering bribes to avoid fighting entirely!
 
 #### Exploration
 
 ![](/img/bag-of-holding/rocks.png)
 
-The prototype's dungeon is linear, but branching could be added with the inclusion of keys and side-doors.  For example, the player uses a key as the hero is approaching a side-door, and instead of continuing on the current path, the hero will unlock and enter a door to a different region of the dungeon.
+The current dungeon is linear, but branching could be added with the inclusion of keys and side-doors.  For example, the player uses a key as the hero is approaching a side-door, and instead of continuing on the current path, the hero will unlock and enter a door to a different region of the dungeon.
+
 
 #### Metagame
 
@@ -76,4 +87,4 @@ The prototype's dungeon is linear, but branching could be added with the inclusi
 
 Apparently every autobattler needs metagame progression, and this concept seems rife with possibilities for variations and progression:  hero classes, hero traits, starting equipment, bag size, queue size, etc.
 
-Whew, talk about scope creep!
+Talk about scope creep!
