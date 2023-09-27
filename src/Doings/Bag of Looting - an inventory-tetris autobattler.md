@@ -78,6 +78,11 @@ Thus I added a meta-progression campaign, to provide an overview over game compl
 However, the meta-game is progressed only when the adventurer leaves the dungeon alive.  Thus the player must balance acquiring and organising loot - for use or sale - with strategically arranging for the bag to overflow before it's too late!
 
 
+### Development process
+
+I've written up my thoughts and experiences regarding the development process.  It is quite extensive (read: wordy), so lives as a separate article to this.  You can find it at both ["Post-mortem reflections" on Itch.io](https://romlok.itch.io/bagoflooting/devlog/611491/post-mortem-reflections) and ["Bag of Looting postmortem" on this very site](/doings/bag-of-looting-postmortem/).
+
+
 ### Conclusion
 
 For now I consider Bag of Looting to be complete.  There is of course much more that could be added or improved, but this was never intended to be a long-term project.  I had the good fortune to have both motivation and free time coincide long enough to push this through to where it is, and I'm happy with how it turned out.
