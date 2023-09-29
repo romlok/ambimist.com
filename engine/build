@@ -23,7 +23,8 @@ HISTORY_TEMPLATE="$ENGINE_PATH/history-content.html"
 HISTORY_ITEM_TEMPLATE="$ENGINE_PATH/history-item.html"
 
 # Reserved names don't get deleted or built as pages
-RESERVED_NAMES="src|engine|css|img|footer|README|CNAME"
+RESERVED_PAGENAMES="footer|README"
+RESERVED_FILENAMES="src|engine|css|img|CNAME|robots\.txt"
 DRAFT_PREFIX="DRAFT_"
 
 FOOTER_FILE="$SRC_PATH/footer.html"
@@ -63,8 +64,11 @@ section_name() {
 
 
 is_reserved_name() {
+	basename "$1" \
+		| grep -xE "$RESERVED_FILENAMES" > /dev/null \
+	||
 	page_name "$1" \
-		| grep -xE "$RESERVED_NAMES" >/dev/null
+		| grep -xE "$RESERVED_PAGENAMES" >/dev/null
 }
 
 is_index_name() {
