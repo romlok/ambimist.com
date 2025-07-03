@@ -148,6 +148,7 @@ footer {
 }
 footer a {
 	line-height: 0;
+	margin-left: 0.4rem;
 	color: var(--secondary-color);
 }
 footer img {
