@@ -2,7 +2,7 @@
 
 ![Bag of Looting title card](/img/bag-of-looting/title-card.png)
 
-[Bag of Looting](https://romlok.itch.io/bagoflooting) is a game I created over the summer of '23.  It combines the falling-shape mechanic of Tetris with a side-scrolling autobattler and a meta-progression system.
+[Bag of Looting](https://uttergubbins.itch.io/bagoflooting) is a game I created over the summer of '23.  It combines the falling-shape mechanic of Tetris with a side-scrolling autobattler and a meta-progression system.
 
 As with most games in the Tetris family, the core gameplay involves the arrangement of falling shapes within a limited grid.  However, the autobattler aspect is used to determine both the type and rate of incoming shapes, and to provide the mechanism for clear space in the primary gameplay grid.
 
@@ -80,7 +80,7 @@ However, the meta-game is progressed only when the adventurer leaves the dungeon
 
 ### Development process
 
-I've written up my thoughts and experiences regarding the development process.  It is quite extensive (read: wordy), so lives as a separate article to this.  You can find it at both ["Post-mortem reflections" on Itch.io](https://romlok.itch.io/bagoflooting/devlog/611491/post-mortem-reflections) and ["Bag of Looting postmortem" on this very site](/doings/bag-of-looting-postmortem/).
+I've written up my thoughts and experiences regarding the development process.  It is quite extensive (read: wordy), so lives as a separate article to this.  You can find it at both ["Post-mortem reflections" on Itch.io](https://uttergubbins.itch.io/bagoflooting/devlog/611491/post-mortem-reflections) and ["Bag of Looting postmortem" on this very site](/doings/bag-of-looting-postmortem/).
 
 
 ### Conclusion

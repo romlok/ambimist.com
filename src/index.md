@@ -2,7 +2,7 @@ I'm a professional software developer.  I work mostly in the web domain, but occ
 
 [Videos on PeerTube](https://spectra.video/a/ambimist/)
 
-[Games on Itch.io](https://romlok.itch.io)
+[Games on Itch.io](https://uttergubbins.itch.io)
 
 [Ramblings on Fedi](https://toot.io/@ambimist)
 
